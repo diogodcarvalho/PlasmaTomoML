@@ -14,9 +14,9 @@ One must have installed and configured the following programs and packages to ru
 - [Theano](http://deeplearning.net/software/theano/)
 - [Keras](https://keras.io/) (optimized to run on top of Theano)
 
-## Directory Structure 
+## Access to Tomography Databases 
 
-The folders developed for JET/ and COMPASS/ are completely independent of each other. No data from the actual experimets is available in this repository since disclosure is not permited. Neverthless instructions for the files structure are given in their respective directories.
+The folders developed for JET/ and COMPASS/ are completely independent of each other. No data from the actual experimets is available in this repository since disclosure is not permited. Neverthless scripts to read from the databases (which will only work if one has access to them) are given as well as instructions for the outputed files structure.
 
 ## References:
 
