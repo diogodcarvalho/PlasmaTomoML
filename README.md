@@ -20,8 +20,8 @@ The folders developed for JET/ and COMPASS/ are completely independent of each o
 
 ## References:
 
-[1] 'Plasma Tomography with Machine Learning' - D. D. Carvalho (2018) - Waiting for publication
+[1] Plasma Tomography with Machine Learning - D. D. Carvalho (2018) - M.Sc. Thesis on the making...
 
-[2] ['Regularization extraction for real-time plasma tomography at JET'](http://ocs.ciemat.es/EPS2018ABS/pdf/P4.1005.pdf) - D. R. Ferreira, D. D. Carvalho, P. J. Carvalho, H. Fernandes (2018)
+[2] [Regularization extraction for real-time plasma tomography at JET](http://ocs.ciemat.es/EPS2018ABS/pdf/P4.1005.pdf) - D. R. Ferreira, D. D. Carvalho, P. J. Carvalho, H. Fernandes (2018)
 
-[3] ['Full-Pulse Tomographic Reconstruction with Deep Neural Networks'](https://arxiv.org/pdf/1802.02242.pdf) - D. R. Ferreira, P. J. Carvalho, H. Fernandes (2018)
+[3] [Full-Pulse Tomographic Reconstruction with Deep Neural Networks](https://arxiv.org/pdf/1802.02242.pdf) - D. R. Ferreira, P. J. Carvalho, H. Fernandes (2018)
