@@ -148,6 +148,6 @@ for pulse,t,g_mi,g_i in zip(pulse_valid,t_valid,g_m,g_valid):
     
 print 'Average Values ------------------------------'
 print 'ssim: %.4f +- %.4f' % (np.mean(SSIM), np.std(SSIM))
-print 'psnr: %.4f +- %.4f' % (np.mean(PSNR), np.std(PSNR))
+print 'psnr: %.2f +- %.2f' % (np.mean(PSNR), np.std(PSNR))
 print 'nrmse: %.2f +- %.2f' % (np.mean(NRMSE), np.std(NRMSE))
 print 'power: %.2f +- %.2f' % (np.mean(POWER), np.std(POWER))  
