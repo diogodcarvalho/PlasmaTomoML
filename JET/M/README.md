@@ -28,15 +28,25 @@
 
 - Run `anim_full_pulse.py` to generate an .mp4 animation with reconstructions for a given pulse
   - User defined parameters:
-    - `pulse` pulse you wish to perform a full pulse reconstruction
-    - `fname` path to .hdf file where the information about, this file should be created beforehand using `PlasmaTomoML/JET/data/get_bolo.py` which only runs in a JET cluster
+    - `pulse` pulse you wish to perform reconstructions
+    - `fname` path to .hdf file where the information about the choosen pulse is stored, this file should be created beforehand using `PlasmaTomoML/JET/data/get_bolo.py` which only runs in a JET cluster
     - `save_path` directory where the matrix `M.npy` was stored (Default = './Results/')
     - `plot_los` if True animation with lines of sight appearing is included (Default = 'True')
     - `tmin`,`tmax` animation start and end time (Default uses full pulse)
   - Outputs:
       - `xx.mp4` animation where xx = `pulse`, will be stored inside `save_path`
       - `xx.npz` file containing time vector, bolometer values and correspondent reconstructions, will be stored inside `save_path`
-  - Notes
+ 
+- Run `plot_reconstruction_multi.py` generate a grid of reconstructions for one one pulse
+  - User defined parameters:
+       - `pulse` pulse you wish to perform a full pulse reconstruction
+       - `fname` path to .hdf file where the information about, this file should be created beforehand using `PlasmaTomoML/JET/data/get_bolo.py` which only runs in a JET cluster
+       - `save_path` directory where the matrix `M.npy` was stored (Default = './Results/') 
+       - `tmin`,`tmax` first and last reconstruction time
+       - `dt` time step between images
+       - `nx`,`ny` number of reconstructions plotted per row and collumn, when changing this you might need to edit the inputs of the function `plt.subplots_adjust()` for a better aspect of the final image. Also make sure the dimensions match the number of reconstructions to plot
+  - Outputs:
+      - `JET_pulse_tmin_tmax.png` , will be stored inside `save_path`
  
  - Run `plot_comparison.py` to generate .png files with differences between original reconstructions and new ones performed with matrix M
     - User defined parameters:
@@ -47,4 +57,13 @@
     - Notes:
       - Only the validation set is used (defined in `i_divided.npy` saved by running `fit_M.py`)
       - During the plotting the values of the quality metrics (ssim, psnr, nrmse, e_power) are printed in the terminal
+      - If you only wish to calculate the quality metrics run `calc_metrics.py`
+
+- Run `calc_metrics.py` to calculate the quality metrics (ssim,psnr,nrmse,e_power) in the validation set
+    - User defined parameters:
+      - `fname` .hdf file on which `M.npy` was fitted (Default = train_data.hdf)
+      - `save_path` directory where the matrix `M.npy` was stored (Default = './Results/')
+    - Outputs:
+      - (ssim,psnr,nrmse,e_power) average values printed in the terminal
+ 
  
