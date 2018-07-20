@@ -46,8 +46,10 @@
        - `dt` time step between images
        - `nx`,`ny` number of reconstructions plotted per row and collumn, when changing this you might need to edit the inputs of the function `plt.subplots_adjust()` for a better aspect of the final image. Also make sure the dimensions match the number of reconstructions to plot
   - Outputs:
-      - `JET_pulse_tmin_tmax.png` , will be stored inside `save_path`
- 
+      - `JET_pulse_tmin_tmax.png` , will be stored inside `save_path` (see example below)
+      
+![Demo](https://user-images.githubusercontent.com/32575442/43010481-82679900-8c38-11e8-8485-c459df86220e.png)
+
  - Run `plot_comparison.py` to generate .png files with differences between original reconstructions and new ones performed with matrix M
     - User defined parameters:
       - `fname` .hdf file on which `M.npy` was fitted (Default = train_data.hdf)
