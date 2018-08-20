@@ -12,12 +12,18 @@
   - Outputs:
     - `train.png` computational graph, used to check if code is running on GPU
     - `train.log` stores training set loss function error during training
-    - `loss_log.png` plot of loss function evolution
+    - `loss_log.png` plot of loss function evolution (expected behaviour below)
     - `i_divided.npy` indices of training/validation/test set usefull if tests are to be performed later
     - `M.npy` final matrix obtained
   - Notes:
     - The fitting process can be stopped at any point by pressing Ctrl+c, all the files output will still created and saved
     - This script must be run before any of the others can be used
+    
+<p align="center">
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/README_examples/loss_log.png width="400">
+</p>
+
+
 
 ## To plot the regularization patterns 
 
