@@ -1,4 +1,4 @@
-## Intructions
+## To extract the regularization matrix
 
 - Run `fit_M.py` to perform the matrix fitting using gradient descent with momentum implemented on Theano
   - User defined parameters:
@@ -18,6 +18,8 @@
     - The fitting process can be stopped at any point by pressing Ctrl+c, all the files output will still created and saved
     - This script must be run before any of the others can be used
 
+## To plot the regularization patterns 
+
 - Run `plot_M.py` to create .png files with the regularization patterns obtained by the fitting of M
   - User defined parameters:
     - `save_path` directory where the matrix `M.npy` was stored (Default = './Results/')
@@ -25,6 +27,8 @@
     - `v_min`,`v_max` plot dynamic range (Default = 0.,1.)
   - Outputs:
     - `LOS/` directory with all regularization patterns as .png files, will be stored inside `save_path`
+    
+## To generate full pulse animations
 
 - Run `anim_full_pulse.py` to generate an .mp4 animation with reconstructions for a given pulse
   - User defined parameters:
@@ -38,8 +42,10 @@
       - `xx.npz` file containing time vector, bolometer values and correspondent reconstructions, will be stored inside `save_path`
       
 <p align="center">
-  <img src="https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/92213.gif" alt="Sublime's custom image"/>
+  <img src="https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/92213.gif" width="600"/>
 </p> 
+
+## To generate multiple reconstructions
 
 - Run `plot_reconstruction_multi.py` generate a grid of reconstructions for one one pulse
   - User defined parameters:
@@ -52,7 +58,9 @@
   - Outputs:
       - `JET_pulse_tmin_tmax.png` , will be stored inside `save_path` (see example below)
       
-![Demo](https://user-images.githubusercontent.com/32575442/43010481-82679900-8c38-11e8-8485-c459df86220e.png)
+<p align="center">
+  <img src=https://user-images.githubusercontent.com/32575442/43010481-82679900-8c38-11e8-8485-c459df86220e.png width="700"/>
+</p> 
 
  - Run `plot_comparison.py` to generate .png files with differences between original reconstructions and new ones performed with matrix M
     - User defined parameters:
