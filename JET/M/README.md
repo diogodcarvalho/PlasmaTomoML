@@ -38,7 +38,7 @@
       - `xx.npz` file containing time vector, bolometer values and correspondent reconstructions, will be stored inside `save_path`
       
 <p align="center">
-  <img src="https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/92213.gif" alt="Sublime's custom image"/>
+  <img src="https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/92213.gif" width="600"/>
 </p> 
 
 - Run `plot_reconstruction_multi.py` generate a grid of reconstructions for one one pulse
@@ -52,7 +52,9 @@
   - Outputs:
       - `JET_pulse_tmin_tmax.png` , will be stored inside `save_path` (see example below)
       
-![Demo](https://user-images.githubusercontent.com/32575442/43010481-82679900-8c38-11e8-8485-c459df86220e.png)
+<p align="center">
+  <img src=https://user-images.githubusercontent.com/32575442/43010481-82679900-8c38-11e8-8485-c459df86220e.png width="700"/>
+</p> 
 
  - Run `plot_comparison.py` to generate .png files with differences between original reconstructions and new ones performed with matrix M
     - User defined parameters:
