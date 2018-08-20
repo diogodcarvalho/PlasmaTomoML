@@ -36,7 +36,11 @@
   - Outputs:
       - `xx.mp4` animation where xx = `pulse`, will be stored inside `save_path`
       - `xx.npz` file containing time vector, bolometer values and correspondent reconstructions, will be stored inside `save_path`
- 
+      
+<p align="center">
+  <img src="https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/92213.gif" alt="Sublime's custom image"/>
+</p> 
+
 - Run `plot_reconstruction_multi.py` generate a grid of reconstructions for one one pulse
   - User defined parameters:
        - `pulse` pulse you wish to perform a full pulse reconstruction
