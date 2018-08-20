@@ -12,6 +12,7 @@
   - Outputs:
     - `train.png` computational graph, used to check if code is running on GPU
     - `train.log` stores training set loss function error during training
+    - `loss_log.png` plot of loss function evolution
     - `i_divided.npy` indices of training/validation/test set usefull if tests are to be performed later
     - `M.npy` final matrix obtained
   - Notes:
@@ -69,6 +70,8 @@
   <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/README_examples/JET_92213_49.62_54.02.png width="700"/>
 </p> 
 
+## To compare original and new reconstructions
+
  - Run `plot_comparison.py` to generate .png files with differences between original reconstructions and new ones performed with matrix M
     - User defined parameters:
       - `fname` .hdf file on which `M.npy` was fitted (Default = train_data.hdf)
@@ -79,6 +82,8 @@
       - Only the validation set is used (defined in `i_divided.npy` saved by running `fit_M.py`)
       - During the plotting the values of the quality metrics (ssim, psnr, nrmse, e_power) are printed in the terminal
       - If you only wish to calculate the quality metrics run `calc_metrics.py`
+
+## To calculate quality metrics
 
 - Run `calc_metrics.py` to calculate the quality metrics (ssim,psnr,nrmse,e_power) in the validation set
     - User defined parameters:
