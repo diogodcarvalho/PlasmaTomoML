@@ -148,7 +148,7 @@ np.save(fname, M)
 # -------------------------------------------------------------------------
 # Plot loss function during training
 
-log_loss = np.log_loss(save_path + 'train.log',skiprows = 1,usecols = (1,2))
+log_loss = np.loadtxt(save_path + 'train.log',skiprows = 1,usecols = (1,2))
 
 i = log_loss[:,0]
 loss_train = log_loss[:,1]

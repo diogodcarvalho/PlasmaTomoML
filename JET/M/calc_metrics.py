@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import sys
 sys.path.insert(0, '../bib/')
 import bib_metrics
-import bib_utils 
 import bib_data
 import bib_geom
 
