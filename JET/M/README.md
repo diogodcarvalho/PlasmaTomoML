@@ -27,7 +27,14 @@
     - `v_min`,`v_max` plot dynamic range (Default = 0.,1.)
   - Outputs:
     - `LOS/` directory with all regularization patterns as .png files, will be stored inside `save_path`
-    
+
+<p align="center">
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/README_examples/JET_LOS_4.png width="200" />
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/README_examples/JET_LOS_9.png width="200" /> 
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/README_examples/JET_LOS_14.png width="200" />
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/README_examples/JET_LOS_21.png width="200" />
+</p>
+
 ## To generate full pulse animations
 
 - Run `anim_full_pulse.py` to generate an .mp4 animation with reconstructions for a given pulse
