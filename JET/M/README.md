@@ -89,6 +89,10 @@
       - During the plotting the values of the quality metrics (ssim, psnr, nrmse, e_power) are printed in the terminal
       - If you only wish to calculate the quality metrics run `calc_metrics.py`
 
+<p align="center">
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/README_examples/JET_89077_48.6.png width="700"/>
+</p> 
+
 ## To calculate quality metrics
 
 - Run `calc_metrics.py` to calculate the quality metrics (ssim,psnr,nrmse,e_power) in the validation set
