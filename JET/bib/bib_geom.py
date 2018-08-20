@@ -172,8 +172,9 @@ def get_los_JET(inside = True):
 	Returns lines of sight ending and starting points
 	Inputs:
 		inside - if True returns only points inside vessel
+				 if False returns only points outside vessel
 	Outputs:
-		ri,rz,zi,zf - LOS coordinates (N_los,)
+		ri,rz,zi,zf - LOS end and starting points coordinates (N_los,)
 	"""
 
 	ri = []
@@ -191,12 +192,14 @@ def get_los_JET(inside = True):
 			if inside:
 				ri.append(float(parts[10]))
 				zi.append(float(parts[11]))
+				rf.append(float(parts[13]))
+				zf.append(float(parts[14]))
+
 			else:
 				ri.append(float(parts[7]))
 				zi.append(float(parts[8]))
-
-			rf.append(float(parts[13]))
-			zf.append(float(parts[14]))
+				rf.append(float(parts[10]))
+				zf.append(float(parts[11]))
 
 	f.close()
 
