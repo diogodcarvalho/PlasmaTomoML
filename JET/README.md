@@ -10,5 +10,5 @@ Further instructions on how to work with the code is given inside the `M/` and `
 
 ## IMPORTANT - Accessing JET data
 
-Before any NN is trained or regularization is fitted, you have to create *.hdf file with the tomograms present in JET database. To do so go to the `data/` directory and run `get_tomo_JET_database.py`. The file needs to be edited to choose the desired pulses and will only work inside a JET cluster. All data files created will be stored in this directory
+Before any NN is trained or regularization is fitted, you have to create *.hdf file with the tomograms present in JET database. To do so go to the `data/` directory and run `get_tomo_JET_database.py`. The file needs to be edited to choose the desired pulses and name of the output file. Will only work inside a JET cluster. All data files created will be stored in this directory
 
