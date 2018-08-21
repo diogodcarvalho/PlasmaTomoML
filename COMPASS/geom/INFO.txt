@@ -1,0 +1,20 @@
+All directorys and files present here are just a copy of the ones available at M. Imrisek shared
+directory. So if any new Geometry is available it just need to be added here, given it follows a similar
+structure to the previously existing ones it shouldn't be too problematic to add what is needed in the 
+bib/ directory files (bib_geom should be the only one needing extra code)
+
+201410 - Pulses [8468,13213]
+-> Camera B has problems for pulses outside region [9860,11150]
+-> For the rest all 3 work (A,B,F)
+
+201701 - Pulses [13214,14884]
+-> Camera F stopped being used for SXR, now it is bolometers, so it is never used
+-> Camera B, viewing cone angle was decresead, so now it is more focused
+
+201708 - Pulses [14885,16127]
+-> Don't know YET ?????
+
+Missing Files
+201802 - Pulses [16128, currently]
+201402 - Did not add because have no idea which working region it belongs
+
