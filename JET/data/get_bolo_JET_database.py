@@ -85,6 +85,10 @@ f = h5py.File(fname, 'w')
 
 # pulses which we want to recover, edit as you wish
 pulses = []
+
+# a good pulse that has nice reconstructions
+# pulses = [92213]
+
 print 'pulses:', pulses
 
 for pulse in pulses:

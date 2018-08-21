@@ -84,6 +84,14 @@ f = h5py.File(fname, 'w')
 
 # pulses which we want to recover, edit as you wish
 pulses = []
+
+# This was the interval used for the NN
+# The ones used for the fitting of the inverse matrix
+# were selected from this group
+# pulse0 = 80128
+# pulse1 = 92504
+# pulses = range(pulse0,pulse1)
+
 print 'pulses:', pulses
 
 for pulse in pulses:
