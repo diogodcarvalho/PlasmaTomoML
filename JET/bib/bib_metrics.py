@@ -1,46 +1,18 @@
+
+import numpy as np
+import matplotlib.pyplot as plt
+
 from skimage.measure import  compare_mse, compare_nrmse, compare_ssim, compare_psnr
 from bib_geom import R_MIN,R_MAX,Z_MIN,Z_MAX
 
-import matplotlib.pyplot as plt
-import numpy as np
-
-def compare_images(imageA, imageB, title):
-	# compute the mean squared error and structural similarity
-	# index for the images
-	mse = compare_mse(imageA, imageB)
-	nrmse = compare_nrmse(imageA, imageB)
-	psnr = compare_psnr(imageA, imageB, data_range= np.max(imageA)-np.min(imageA))
-	ssim,_ = compare_ssim(imageA, imageB,  full=True)
- 
-	# setup the figure
-	fig = plt.figure(title)
-	plt.suptitle("MSE: %.2f, SSIM: %.2f, NRMSE: %.2f, PSNR: %.2f" % (mse, ssim, nrmse, psnr))
- 
-	# show first image
-	ax = fig.add_subplot(1, 2, 1)
-	plt.imshow(imageA, origin = 'lower', vmin = 0, vmax = np.max(imageA), cmap = 'inferno')
-	plt.axis("off")
- 
-	# show the second image
-	ax = fig.add_subplot(1, 2, 2)
-	plt.imshow(imageB, origin = 'lower', vmin = 0, vmax = np.max(imageA), cmap = 'inferno')
-	plt.axis("off")
-	
-	# show the images
-	plt.savefig(title + '.png')
-	#plt.show()
-
-def compare_mae_pixel(imageA, imageB):
-
-	if imageA.ndim == 2:
-		imageA = imageA[np.newaxis,:]
-		imageB = imageB[np.newaxis,:]
-
-	err = np.absolute(imageA-imageB)
-
-	return err
-
 def compare_rmse_pixel(imageA,imageB):
+	"""
+	Calculate root mean squared error pixelwise
+	Inputs:
+		imageA, imageB - images to compare (can be arrays of images)
+	Outputs:
+		err - rmse value
+	"""
 
 	if imageA.ndim == 2:
 		imageA = imageA[np.newaxis,:]
@@ -51,7 +23,13 @@ def compare_rmse_pixel(imageA,imageB):
 	return err
 
 def compare_mre_pixel(imageA,imageB):
-
+	"""
+	Calculate mean relative error pixelwise
+	Inputs:
+		imageA, imageB - images to compare
+	Outputs:
+		err - mre value
+	"""
 	if imageA.ndim == 2:
 		imageA = imageA[np.newaxis,:]
 		imageB = imageB[np.newaxis,:]
@@ -61,7 +39,14 @@ def compare_mre_pixel(imageA,imageB):
 	return np.asarray(err)
 
 def compare_all_metrics(imageA,imageB,mean = False):
-
+	"""
+	Calculate ssim, mse, psnr and nrmse values 
+	Inputs:
+		imageA, imageB - images to compare (can be arrays of images)
+		mean - if True mean is done over images (in the case we have an array)
+	Outputs:
+		ssim,mse,psnr,nrmse
+	"""
 	if imageA.ndim == 2:
 		imageA = imageA[np.newaxis,:]
 		imageB = imageB[np.newaxis,:]
@@ -82,7 +67,14 @@ def compare_all_metrics(imageA,imageB,mean = False):
 	return np.asarray(ssim), np.asarray(mse), np.asarray(psnr), np.asarray(nrmse)
 
 def compare_all_metrics_pixel(imageA,imageB,mean = False):
-	
+	"""
+	Calculate rmse, amre and mre values 
+	Inputs:
+		imageA, imageB - images to compare (can be arrays of images)
+		mean - if True mean is done over images (in the case we have an array)
+	Outputs:
+		rmse_pixel, amre_pixel, mre_pixel
+	"""
 	if imageA.ndim == 2:
 		imageA = imageA[np.newaxis,:]
 		imageB = imageB[np.newaxis,:]
@@ -98,7 +90,14 @@ def compare_all_metrics_pixel(imageA,imageB,mean = False):
 	return rmse_pixel,amre_pixel,mre_pixel
 
 def plot_metric(metric, i_train, i_valid, i_test, title, log = False):
-
+	"""
+	Plot metric values over the data-set
+	Inputs:
+		metric - (array) metric values
+		i_train,i_valid,i_test - indeces of training/validation/test set
+		title - title to give to plot
+		log - if True log scale in vertical axis is used
+	"""
 	plt.figure()
 	plt.title(title)
 	plt.plot(range(len(i_train)), metric[i_train], 'r.', label = 'train')
@@ -117,7 +116,13 @@ def plot_metric(metric, i_train, i_valid, i_test, title, log = False):
 	print 'test  : %10.3f %10.3f' % (np.mean(metric[i_test]), np.std(metric[i_test]))
 
 def plot_metric_pixel(metric, title, clb_legend = None):
-
+	"""
+	Plot and generate *.png image of metric pixelwise values
+	Inputs:
+		metric - (2D array) metric values
+		title - title to give to plot
+		clb_legend - units of colorbar 
+	"""
 	plt.figure()
 	plt.imshow(metric,vmin = np.min((0,np.min(metric))), vmax = np.max(metric), origin = 'lower', extent = [R_MIN, R_MAX, Z_MIN, Z_MAX])
 	plt.title(title)
@@ -129,28 +134,18 @@ def plot_metric_pixel(metric, title, clb_legend = None):
 	plt.savefig(title + '.png',dpi=300,bbox_inches='tight')
 	plt.close()
 
-def plot_metric_pixel_multi(metric, i_train, i_valid, i_test, title, clb_legend = None):
 
+def plot_metric_pixel_multi(metric, i_train, i_valid, i_test, title, clb_legend = None):	
+	"""
+	Plot and generate *.png image of metric pixelwise values over the data-set
+	Inputs:
+		metric - (array) metric values
+		i_train,i_valid,i_test - indeces of training/validation/test set
+		title - title to give to plot
+		log - if True log scale in vertical axis is used
+	"""
 	plot_metric_pixel(metric[i_train], title + '_train', clb_legend)
 	plot_metric_pixel(metric[i_valid], title + '_valid', clb_legend)
 	plot_metric_pixel(metric[i_test], title + '_testn', clb_legend)
-	
-# ----------------------------------------------------------------------------
-# UNDER WORK
 
-# skimage.measure already has this ones implementd
-#
-# def compare_mse(imageA, imageB):
-# 	err = np.sum((imageA - imageB)** 2)
-# 	err /= float(imageA.shape[0] * imageA.shape[1])
-# 	return err
 
-# def compare_nmse(imageA,imageB):
-# 	err = compare_mse(imageA,imageB)
-# 	err /= (np.mean(imageA)*np.mean(imageB))
-# 	return err
-
-# def compare_psnr(imageA, imageB):
-
-# 	err = 20*np.log10(np.max(imageA)/np.sqrt(compare_mse(imageA,imageB)))
-# 	return err

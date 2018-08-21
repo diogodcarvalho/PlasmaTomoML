@@ -1,12 +1,20 @@
 
+import sys
 import h5py
 import numpy as np
 
 from bib_geom import KB5_BROKEN
 
+#-----------------------------------------------------------------------------
+# The following functions work óutside a  JET cluster 
+# They require the creation of *.hdf files using the files 
+# get_bolo_JET_database.py and get_tomo_JET_database.py
+# located in the directory JET/data/
+
 def get_pulse_JET(fname, pulse, faulty = True, flatten = True, clip_tomo = False):
 	"""
-	Get Bolometer measures and reconstructions for a specific pulse
+	Get Bolometer measures and reconstructions for a specific pulse from a *.hdf 
+	already created with the get_tomo_JET_database() routine
 	Inputs: 
 		fname - path to file
 		pulse - ID of pulse 
@@ -55,7 +63,8 @@ def get_pulse_JET(fname, pulse, faulty = True, flatten = True, clip_tomo = False
 
 def get_tomo_JET(fname, faulty = True,  flatten = True, clip_tomo = False):
 	"""
-	Get Bolometer measures and reconstructions
+	Get all Bolometer measures and reconstructions from a *.hdf 
+	already created with the get_tomo_JET_database() routine
 	Inputs: 
 		fname - path to file
 		faulty - if true faulty detectors keep their values (set to zero otherwise)
@@ -92,7 +101,7 @@ def get_tomo_JET(fname, faulty = True,  flatten = True, clip_tomo = False):
 				kb5 = group['bolo'][:]
 
 			except:
-				print 'HDF FILE KEY ERROR'
+				sys.exit('HDF FILE KEY ERROR')
 
 
 		if not(faulty):
@@ -124,7 +133,8 @@ def get_tomo_JET(fname, faulty = True,  flatten = True, clip_tomo = False):
 
 def get_bolo_JET(fname, pulse, faulty = True, clip_tomo = False):
 	"""
-	Get solely Bolometer measures 
+	Get solely the bolometer measures and reconstructions from a *.hdf 
+	already created with the get_bolo_JET_database() routine
 	Inputs: 
 		fname - path to file
 		pulse - the pulse from which we want the bolometer values

@@ -1,5 +1,6 @@
-import numpy as np
+
 import time
+import numpy as np
 
 def divide_data(n_reconstructions, ratio = [.8,.1,.1], test_set = True, random = False):
 	"""
@@ -48,11 +49,6 @@ def divide_data(n_reconstructions, ratio = [.8,.1,.1], test_set = True, random =
 		i_test = []
 
 	return i_train,i_valid,i_test
-
-def load_index_set(fname = './XY_divided.npz'):
-	
-	data = np.load(fname)
-	return data['i_train'], data['i_valid'], data['i_test']
 
 def resize_NN_image(tomo, training = False):
 	"""
