@@ -6,7 +6,7 @@
 - `data/` contains scripts to download the bolometer measurements and correspondent reconstructions from JET database, will only work inside a JET cluster. The downloaded data files will be stored here.
 - `geom/` information about the JET vessel geometry and lines of sight of the kb5 bolomter system
 
-Further instructions on how to work with the code is given inside the `M/` and `NN/` directories depending on which method you pretend to apply
+Further instructions on how to work with the code is given inside the `M/` and `NN/` directories
 
 ## IMPORTANT - Accessing JET data
 
