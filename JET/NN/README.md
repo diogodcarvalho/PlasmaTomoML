@@ -30,8 +30,20 @@ The NN was implemented using the Keras library, the building blocks of the NN ar
     - `i_divided.npy` indices of training/validation/test set usefull if tests are to be performed later
     - `model_parameters.hdf` best NN parameters obtained
   - Notes:
-    - The fitting process can be stopped at any point by pressing Ctrl+c, all the files output will still created and saved
+    - The training process can be stopped at any point by pressing Ctrl+c
     - This script must be run before any of the others can be used
+
+## To plot the loss function behaviour
+
+- Run `plot_loss.py` to plot the training/validation loss evolution during training 
+  - User defined parameters:
+    - `save_path` directory in which the 'train.log' is located and where all outputs will be saved (Default = './Results/')
+  - Outputs:
+    - `loss_log.png` loss function evolution (example below)
+
+<p align="center">
+  <img src="https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/NN/README_examples/loss_log.png" width="400"/>
+</p> 
 
 ## To generate full pulse animations
 
