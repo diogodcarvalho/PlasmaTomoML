@@ -6,8 +6,9 @@ import numpy as np
 from bib_geom import KB5_BROKEN
 
 #-----------------------------------------------------------------------------
+# ATTENTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # The following functions work óutside a  JET cluster 
-# They require the creation of *.hdf files using the files 
+# Nevertheless they require the creation of *.hdf files using the files 
 # get_bolo_JET_database.py and get_tomo_JET_database.py
 # located in the directory JET/data/
 
@@ -20,7 +21,7 @@ def get_pulse_JET(fname, pulse, faulty = True, flatten = True, clip_tomo = False
 		pulse - ID of pulse 
 		faulty - if true faulty detectors keep their values (set to zero otherwise)
 		flatten - If true g is returned flattened
-		clip_tomo - If true tomograms are clipped to 0 as minimum value
+		clip_tomo - If true tomograms and detectors are clipped to 0 as minimum value
 	Outputs:
 		f_data - measurement from kb5 [MW/m^-2]
 		g_data - reconstruction [MW/m^-3]
@@ -69,7 +70,7 @@ def get_tomo_JET(fname, faulty = True,  flatten = True, clip_tomo = False):
 		fname - path to file
 		faulty - if true faulty detectors keep their values (set to zero otherwise)
 		flatten - If true g is returned flattened
-		clip_tomo - If true tomograms are clipped to 0 as minimum value
+		clip_tomo - If true tomograms and detectors are clipped to 0 as minimum value
 	Outputs:
 		f_data - measurement from KB5 [MW/m^-2]
 		g_data - reconstructions [MW/m^-3]
@@ -139,6 +140,7 @@ def get_bolo_JET(fname, pulse, faulty = True, clip_tomo = False):
 		fname - path to file
 		pulse - the pulse from which we want the bolometer values
 		faulty - if False sets the values of faulty detectores to zero
+		clip_tomo - If true tomograms and detectors are clipped to 0 as minimum value
 	Outputs:
 		f_data - measurement from bolometers (includes non active) [MW/m^-2]
 		t - time corresponding to the reconstruction [s]

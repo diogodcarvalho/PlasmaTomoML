@@ -26,8 +26,8 @@ Z_MIN = -1.77 - 0.01
 Z_MAX = +2.13 + 0.01
 
 # pixel spacement 
-dr = (R_MAX-R_MIN)/(N_COLS)
-dz = (Z_MAX-Z_MIN)/(N_ROWS)
+DR = (R_MAX-R_MIN)/(N_COLS)
+DZ = (Z_MAX-Z_MIN)/(N_ROWS)
 
 def transform(r, z):
 	"""
@@ -301,8 +301,8 @@ def get_centroid(tomo):
 		R_centroind, Z_centroid - position of centroid (N_reconstructions,)		
 	"""
 
-	R = np.arange(R_MIN+dr/2., R_MAX, dr)
-	Z = np.arange(Z_MIN+dr/2., Z_MAX, dz)
+	R = np.arange(R_MIN+DR/2., R_MAX, DR)
+	Z = np.arange(Z_MIN+DR/2., Z_MAX, DZ)
 
 	R_centroid = np.sum(tomo, axis = -2)*R
 	Z_centroid = np.sum(tomo, axis = -1)*Z 
