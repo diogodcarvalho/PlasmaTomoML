@@ -1,11 +1,13 @@
 
+import csv
 import numpy as np
 import matplotlib.pyplot as plt
 
 import sys
 sys.path.insert(0, '../bib/')
 import bib_geom 
-import bib_data 
+import bib_data
+import bib_utils 
 
 # ----------------------------------------------------------
 # Import bolometer measures and reconstructions from a
@@ -16,23 +18,40 @@ import bib_data
 pulse = '92213' 
 
 fname = '../data/test_data.hdf'
-f,t = bib_data.get_bolo_JET(fname, pulse, faulty = False)
-
-f = f.transpose()
+f,t = bib_data.get_bolo_JET(fname, pulse, faulty = True, clip_tomo = True)
 
 print 'f :', f.shape, f.dtype
 print 't :', t.shape, t.dtype
 
-# ----------------------------------------------------------
-# Import matrix and perform new reconstructions 
+#------------------------------------------------------------------
+# Initialize NN for given trained weights
 # Choose the directory in wich it was stored
 # output files of this script will also be stored there
 
-save_path = './Results/'
-M = np.load(save_path + 'M.npy')
+import nn_model
 
-g = np.dot(M,f).transpose()
-print 'g :', g.shape, g.dtype
+save_path = './Results/'
+
+# recover number of filters the NN was trained with
+with open(save_path + 'model_options.log') as inputfile:
+    for row in csv.reader(inputfile):
+        print row[0]
+        if 'filters' in row[0]:
+            filters = int(row[0][9:])
+
+# build model
+model = nn_model.build_model(filters)
+
+# load trained parameters
+model_parameters = save_path + 'model_parameters.hdf'
+model.load_weights(model_parameters)
+
+# calculate new reconstructions with the NN
+g_nn = model.predict(f)
+# resize to original resolution
+g_nn = bib_utils.resize_NN_image(g_nn, training = False)
+
+print 'g_nn:', g_nn.shape, g_nn.dtype
 
 # ----------------------------------------------------------
 # Import lines of sight and vessel
@@ -139,9 +158,9 @@ def transform_f_lw(f):
 	return lw
 
 def updatefig(frame):
-	im.set_data(g[frame].reshape((bib_geom.N_ROWS,bib_geom.N_COLS)))
+	im.set_data(g_nn[frame])
 	ttl.set_text('JET pulse %s t=%.2fs' % (pulse, t[frame]))
-	lws = transform_f_lw(f[:,frame])
+	lws = transform_f_lw(f[frame])
 	if plot_los:
 		for lw,line in zip(lws,lines):
 			line.set_lw(lw)
@@ -162,5 +181,5 @@ ani.save(fname, fps=15, extra_args=['-vcodec', 'libx264'], savefig_kwargs={'face
 
 # Choose file where to save the reconstructions
 fname = save_path + pulse 
-np.savez(save_path + pulse, t = t[frames], f = np.transpose(f)[frames], g = np.transpose(g)[frames])
+np.savez(save_path + pulse, t = t[frames], f = f[frames], g = g_nn[frames])
 

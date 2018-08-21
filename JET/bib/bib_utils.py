@@ -64,12 +64,12 @@ def resize_NN_image(tomo, training = False):
 		tomo - reshaped reconstruction
 	"""
 	if training:
-		tomo = np.pad(tomo,((0,0),(4,0),(5,0)), 'constant', constant_values = (0,0))
-		tomo.shape += (1,)
-		
-	else:
-		tomo = tomo[:,:,:,0]
-		tomo = np.delete(tomo, range(4), axis = 1)
-		tomo = np.delete(tomo, range(5), axis = 2)
+		tomo = np.swapaxes(tomo,1,2)
+		tomo = np.lib.pad(tomo, ((0,0),(2,3),(2,2)), 'constant')
+		tomo = tomo[:,np.newaxis,:,:]
 
+	else:
+		tomo = tomo[:,0,2:-3,2:-2]
+		tomo = np.swapaxes(tomo,1,2)
+	
 	return tomo

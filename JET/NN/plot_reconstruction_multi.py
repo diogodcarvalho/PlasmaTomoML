@@ -1,4 +1,5 @@
 
+import csv
 import numpy as np 
 import matplotlib.pyplot as plt
 
@@ -6,6 +7,7 @@ import sys
 sys.path.insert(0, '../bib/')
 import bib_geom
 import bib_data
+import bib_utils
 
 # ----------------------------------------------------------
 # Import bolometer measures and reconstructions from a
@@ -16,7 +18,7 @@ import bib_data
 pulse = '92213' 
 
 fname = '../data/test_data.hdf'
-f,t = bib_data.get_bolo_JET(fname, pulse, faulty = False)
+f,t = bib_data.get_bolo_JET(fname, pulse, faulty = True, clip_tomo = True)
 
 print 'f :', f.shape, f.dtype
 print 't :', t.shape, t.dtype
@@ -35,17 +37,35 @@ f = f[frames]
 print 'f :', f.shape, f.dtype
 print 't :', t.shape, t.dtype
 
-# -------------------------------------------------------------------------
-# Import matrix and perform new reconstructions
+#------------------------------------------------------------------
+# Initialize NN for given trained weights
 # Choose the directory in wich it was stored
 # output files of this script will also be stored there
 
-save_path = './Results/'
-M = np.load(save_path + 'M.npy')
+import nn_model
 
-g_m = np.dot(M,f.transpose()).transpose()
-g_m = g_m.reshape((g_m.shape[0],bib_geom.N_ROWS,bib_geom.N_COLS))
-print 'g_m :', g_m.shape, g_m.dtype
+save_path = './Results/'
+
+# recover number of filters the NN was trained with
+with open(save_path + 'model_options.log') as inputfile:
+    for row in csv.reader(inputfile):
+        print row[0]
+        if 'filters' in row[0]:
+            filters = int(row[0][9:])
+
+# build model
+model = nn_model.build_model(filters)
+
+# load trained parameters
+model_parameters = save_path + 'model_parameters.hdf'
+model.load_weights(model_parameters)
+
+# calculate new reconstructions with the NN
+g_nn = model.predict(f)
+# resize to original resolution
+g_nn = bib_utils.resize_NN_image(g_nn, training = False)
+
+print 'g_nn:', g_nn.shape, g_nn.dtype
 
 # -------------------------------------------------------------------------
 # Plot grid of reconstructions
@@ -67,7 +87,7 @@ for i in range(nx):
 
         print 'Pulse %s t=%.4fs' % (pulse, t[i*ny+j])
 
-        ax[i,j].imshow(g_m[i*ny+j].reshape(bib_geom.N_ROWS,bib_geom.N_COLS), vmin=0, vmax=1.5,
+        ax[i,j].imshow(g_nn[i*ny+j].reshape(bib_geom.N_ROWS,bib_geom.N_COLS), vmin=0, vmax=1.5,
          origin='lower',cmap = 'inferno', extent = [bib_geom.R_MIN, bib_geom.R_MAX, bib_geom.Z_MIN,bib_geom.Z_MAX])
         title = 't=%.2fs' % (t[i*ny+j])
         ax[i,j].set_title(title)

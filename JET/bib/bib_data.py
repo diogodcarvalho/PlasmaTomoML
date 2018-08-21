@@ -4,7 +4,7 @@ import numpy as np
 
 from bib_geom import KB5_BROKEN
 
-def get_pulse_JET(fname, pulse, faulty = True, flatten = True):
+def get_pulse_JET(fname, pulse, faulty = True, flatten = True, clip_tomo = False):
 	"""
 	Get Bolometer measures and reconstructions for a specific pulse
 	Inputs: 
@@ -12,6 +12,7 @@ def get_pulse_JET(fname, pulse, faulty = True, flatten = True):
 		pulse - ID of pulse 
 		faulty - if true faulty detectors keep their values (set to zero otherwise)
 		flatten - If true g is returned flattened
+		clip_tomo - If true tomograms are clipped to 0 as minimum value
 	Outputs:
 		f_data - measurement from kb5 [MW/m^-2]
 		g_data - reconstruction [MW/m^-3]
@@ -46,15 +47,20 @@ def get_pulse_JET(fname, pulse, faulty = True, flatten = True):
 	f_data = np.asarray(f_data, dtype = np.float32)
 	g_data = np.asarray(g_data, dtype = np.float32)
 
+	if clip_tomo:
+		f_data = np.clip(f_data, a_min = 0, a_max = None)
+		g_data = np.clip(g_data, a_min = 0, a_max = None)
+
 	return f_data, g_data, t
 
-def get_tomo_JET(fname, faulty = True,  flatten = True):
+def get_tomo_JET(fname, faulty = True,  flatten = True, clip_tomo = False):
 	"""
-	Get Bolometer measures and reconstructions + errors
+	Get Bolometer measures and reconstructions
 	Inputs: 
 		fname - path to file
 		faulty - if true faulty detectors keep their values (set to zero otherwise)
 		flatten - If true g is returned flattened
+		clip_tomo - If true tomograms are clipped to 0 as minimum value
 	Outputs:
 		f_data - measurement from KB5 [MW/m^-2]
 		g_data - reconstructions [MW/m^-3]
@@ -73,9 +79,20 @@ def get_tomo_JET(fname, faulty = True,  flatten = True):
 	for pulse in f:
 
 		group = f[pulse]
-		t = group['t'][:]
-		kb5 = group['kb5'][:]
 		tomo = group['tomo'][:]
+
+		# some older files had different keys
+		try:
+			t = group['t'][:]
+			kb5 = group['kb5'][:]
+
+		except:
+			try:
+				t = group['bolo_t'][:]
+				kb5 = group['bolo'][:]
+
+			except:
+				print 'HDF FILE KEY ERROR'
 
 
 		if not(faulty):
@@ -99,50 +116,13 @@ def get_tomo_JET(fname, faulty = True,  flatten = True):
 	t_data = np.asarray(t_data, dtype = np.float32)
 	pulse_data = np.asarray(pulse_data, dtype = np.int32)
 
+	if clip_tomo:
+		f_data = np.clip(f_data, a_min = 0, a_max = None)
+		g_data = np.clip(g_data, a_min = 0, a_max = None)
+
 	return f_data, g_data,t_data, pulse_data
 
-def get_tomo_JET_v2(fname = '../data/train_data.hdf', faulty = False, flatten = True):
-	"""
-	Get Bolometer measures and reconstructions
-	Inputs: 
-		fname - path to file
-		flatten - If true g is returned flattened
-	Outputs:
-		f_data - measurement from SXR cameras (includes non active) [kW/m^-2]
-		g_data - reconstruction [kW/m^-3]
-	"""
-
-	print 'Reading:', fname
-	f = h5py.File(fname, 'r')
-
-	f_data = []
-	g_data = []
-
-	for pulse in f:
-		group = f[pulse]
-		t = group['bolo_t'][:]
-		kb5 = group['bolo'][:]/1e3
-		tomo = group['tomo'][:]/1e3
-
-		if not(faulty):
-			for i in KB5_BROKEN:
-				kb5[:,i] = 0
-
-		for i in range(len(t)):
-			f_data.append(kb5[i])
-			if flatten:
-				g_data.append(np.flip(np.asarray(tomo[i,:,:]),axis = 0).flatten())
-			else:
-				g_data.append(np.flip(np.asarray(tomo[i,:,:]),axis = 0))
-
-	f.close()
-
-	f_data = np.asarray(f_data, dtype = np.float32)
-	g_data = np.asarray(g_data, dtype = np.float32)
-
-	return f_data, g_data
-
-def get_bolo_JET(fname, pulse, faulty = True):
+def get_bolo_JET(fname, pulse, faulty = True, clip_tomo = False):
 	"""
 	Get solely Bolometer measures 
 	Inputs: 
@@ -174,5 +154,8 @@ def get_bolo_JET(fname, pulse, faulty = True):
 
 	f_data = np.asarray(f_data, dtype = np.float32)
 	t = np.asarray(t, dtype = np.float32)
+
+	if clip_tomo:
+		f_data = np.clip(f_data, a_min = 0, a_max = None)
 
 	return f_data,t

@@ -41,6 +41,7 @@ print 'f:', f.shape, f.dtype
 # if one wants the validation set can also be disregarded by setting ratio=[1.,0.]
 
 i_train, i_valid, _ = bib_utils.divide_data(g.shape[1],ratio = [.9,.1],test_set = False,random = False)
+
 g_valid = g[:,i_valid]
 f_valid = f[:,i_valid]
 g = g[:,i_train]
