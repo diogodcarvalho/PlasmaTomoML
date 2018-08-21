@@ -17,9 +17,10 @@ import bib_utils
 
 pulse = '92213' 
 
-fname = '../data/test_data.hdf'
+fname = '../data/bolo_JET.hdf'
 f,t = bib_data.get_bolo_JET(fname, pulse, faulty = True, clip_tomo = True)
 
+f = np.hstack((f[:,32:],f[:,:32]))
 print 'f :', f.shape, f.dtype
 print 't :', t.shape, t.dtype
 
@@ -53,6 +54,7 @@ g_nn = bib_utils.resize_NN_image(g_nn, training = False)
 
 print 'g_nn:', g_nn.shape, g_nn.dtype
 
+f = np.hstack((f[:,-32:],f[:,:-32]))
 # ----------------------------------------------------------
 # Import lines of sight and vessel
 
@@ -170,6 +172,8 @@ def updatefig(frame):
 # Choose time interval to plot
 tmin = t[0]
 tmax = t[-1]
+tmin = 47
+tmax = 54
 frames = [i for i,ti in enumerate(t) if ti<=tmax and ti>=tmin]
 print 'frames : i - ', frames[0], ' f - ', frames[-1]
 

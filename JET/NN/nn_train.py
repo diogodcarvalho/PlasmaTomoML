@@ -19,7 +19,7 @@ if not os.path.exists(save_path):
 # ----------------------------------------------------------------------
 # Load Data
 
-fname = '../data/train_data_NN.hdf'
+fname = '../data/tomo_JET.hdf'
 f,g,_,_ = bib_data.get_tomo_JET(fname, faulty = True,  flatten = False, clip_tomo = True)
 
 # need to reshape image to match NN dimensions

@@ -15,7 +15,7 @@ import bib_utils
 # File selected needs to be the same one in which the matrix M was fitted
 # since we will be using the validation set previously defined
 
-fname = '../data/train_data_NN.hdf'
+fname = '../data/tomo_JET.hdf'
 
 f,g,t,pulse = bib_data.get_tomo_JET(fname, faulty = True,  flatten = False, clip_tomo = True)
 
