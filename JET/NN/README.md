@@ -1,7 +1,7 @@
 ## JET Bolometer NN model
 
 <p align="center">
-  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/NN/README_examples/JETNet.png width="600">
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/NN/README_examples/JETNet.png width="800">
 </p>
 
 The NN was implemented using the Keras library, the building blocks of the NN are found in the following files:
