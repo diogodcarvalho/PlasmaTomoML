@@ -15,7 +15,7 @@ import bib_data
 
 pulse = '92213' 
 
-fname = '../data/test_data.hdf'
+fname = '../data/bolo_JET.hdf'
 f,t = bib_data.get_bolo_JET(fname, pulse, faulty = False)
 
 print 'f :', f.shape, f.dtype

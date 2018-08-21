@@ -13,7 +13,7 @@ import bib_geom
 # File selected needs to be the same one in which the matrix M was fitted
 # since we will be using the validation set previously defined
 
-fname = '../data/train_data.hdf'
+fname = '../data/tomo_JET.hdf'
 
 f,g,_,_ = bib_data.get_tomo_JET(fname, faulty = True,  flatten = False)
 

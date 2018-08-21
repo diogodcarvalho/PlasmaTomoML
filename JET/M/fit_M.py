@@ -21,7 +21,7 @@ if not os.path.exists(save_path):
 # -------------------------------------------------------------------------
 # Load data 
 
-fname = '../data/train_data.hdf'
+fname = '../data/tomo_JET.hdf'
 
 # if one wants to use the faulty detectors values as is change to fauly = True
 # this will reduce the convergence rate of the algorithm leading to a bigger number of
