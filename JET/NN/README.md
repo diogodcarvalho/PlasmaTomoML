@@ -18,6 +18,8 @@ The NN was implemented using the Keras library, the building blocks of the NN ar
     - `fname` file from which to load the data (Default = '../data/train_data.hdf')
     - `faulty` if True will use faulty detectors, if False will set them to zero (Default = False)
     - `ratio` list with percentage of data to training/validation/test set (Default = [.8,.1,.1])
+    - `loss` loss function used (Default = 'mae')
+    - `filters` number of convolution filters, changes the size of the dense layers proportionally (Default = 20)
     - `learning_rate` gradient descent learning rate, tune for better convergence (Default = 1e-4)
     - `epochs` number of gradient descent iterations (Default = 1e5)
     - `batch_size` (Default = 398)
