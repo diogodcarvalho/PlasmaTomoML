@@ -62,7 +62,7 @@ The NN was implemented using the Keras library, the building blocks of the NN ar
       - `JET_pulse_tmin_tmax.png` , will be stored inside `save_path` (see example below)
       
 <p align="center">
-  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/README_examples/JET_92213_49.62_54.02.png width="700"/>
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/NN/README_examples/JET_92213_49.62_54.02.png width="700"/>
 </p> 
 
 ## To compare original and new reconstructions
@@ -79,7 +79,7 @@ The NN was implemented using the Keras library, the building blocks of the NN ar
       - If you only wish to calculate the quality metrics run `calc_metrics.py`
 
 <p align="center">
-  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/NN/README_examples/JET_89077_48.6.png width="700"/>
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/NN/README_examples/JET_90283.0_46.2981 width="700"/>
 </p> 
 
 ## To calculate quality metrics
