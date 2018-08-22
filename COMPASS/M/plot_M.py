@@ -67,4 +67,5 @@ for i in range(M.shape[1]):
 
 	# choose either .svg or png
 	plt.savefig(save_path + 'LOS/COMPASS_LOS_' + str(i+1) + '.png', dpi = 300, bbox_inches='tight',transparent=True, pad_inches=0)
+	plt.close()
 	# plt.savefig(save_path + 'LOS/COMPASS_LOS_' + str(i+1) + '.svg', bbox_inches='tight',transparent=True, pad_inches=0)

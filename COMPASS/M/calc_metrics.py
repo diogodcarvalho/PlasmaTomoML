@@ -23,23 +23,16 @@ print 'ef:', ef.shape, ef.dtype
 # Load sets indices and keep only the validation one
 # Choose the directory in wich this information was stored
 
-# save_path = './Results/'
-# indeces = np.load( save_path + './i_divided.npz')
+save_path = './Results/'
+indeces = np.load( save_path + './i_divided.npz')
 
-# g_valid = g[indeces['i_valid']]
-# f_valid = f[indeces['i_valid']]
-# ef_valid = ef[indeces['i_valid']]
-# pulse = pulse[indeces['i_valid']]
-# t = t[indeces['i_valid']]
-# fv_valid = fv[indeces['i_valid']]
-# chi2 = chi2[indeces['i_valid']]
-g_valid = g
-f_valid = f
-ef_valid = ef
-pulse = pulse
-t = t
-fv_valid = fv
-chi2 = chi2
+g_valid = g[indeces['i_valid']]
+f_valid = f[indeces['i_valid']]
+ef_valid = ef[indeces['i_valid']]
+pulse = pulse[indeces['i_valid']]
+t = t[indeces['i_valid']]
+fv_valid = fv[indeces['i_valid']]
+chi2 = chi2[indeces['i_valid']]
 
 print 'g_valid:', g_valid.shape, g_valid.dtype
 print 'f_valid:', f_valid.shape, f_valid.dtype
