@@ -13,7 +13,7 @@ import bib_metrics
 # Load data from tomograms obtained with MFR
 
 data_directory = '../data/Reconstructions/'
-f, g, ef,fv,t,chi2,pulse = bib_data.get_tomo_COMPASS(data_directory,  flatten = False)
+f, g, ef,_,t,chi2,pulse = bib_data.get_tomo_COMPASS(data_directory,  flatten = False)
 
 print 'g:', g.shape, g.dtype
 print 'f:', f.shape, f.dtype
@@ -29,10 +29,9 @@ indeces = np.load( save_path + './i_divided.npz')
 g_valid = g[indeces['i_valid']]
 f_valid = f[indeces['i_valid']]
 ef_valid = ef[indeces['i_valid']]
-pulse = pulse[indeces['i_valid']]
-t = t[indeces['i_valid']]
-fv_valid = fv[indeces['i_valid']]
-chi2 = chi2[indeces['i_valid']]
+pulse_valid = pulse[indeces['i_valid']]
+t_valid = t[indeces['i_valid']]
+chi2_valid = chi2[indeces['i_valid']]
 
 print 'g_valid:', g_valid.shape, g_valid.dtype
 print 'f_valid:', f_valid.shape, f_valid.dtype
@@ -98,7 +97,23 @@ print 'nrmse: %.2f +- %.2f' % (np.mean(nrmse), np.std(nrmse))
 print 'e_power: %.2f +- %.2f' % (np.mean(e_power), np.std(e_power)) 
 print 'R_error: %.2f +- %.2f' % (np.mean(R_error), np.std(R_error)) 
 print 'Z_error: %.2f +- %.2f' % (np.mean(Z_error), np.std(Z_error))
-print 'chi2_m: %.2f +- %.2f' % (np.mean(chi2_m), np.std(chi2_m)) 
+print 'chi2_m: %.2f +- %.2f' % (np.mean(chi2_m), np.std(chi2_m))
+
+
+#------------------------------------------------------------------
+# Save results to file *.csv for further analysis
+
+import csv
+
+with open(save_path + 'metrics.csv', 'w') as csvfile:
+	fieldnames = ['pulse', 't', 'ssim', 'psnr', 'nrmse', 'e_power', 'R_error', 'Z_error', 'chi2_m']
+	writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+	writer.writeheader()
+	for i in range(pulse_valid.shape[0]):
+		writer.writerow({'pulse': pulse_valid[i], 't': t_valid[i] , 'ssim': ssim[i],
+		 'psnr': psnr[i], 'nrmse': nrmse[i], 'e_power': e_power[i], 
+		 'R_error': R_error[i], 'Z_error': Z_error[i], 'chi2_m': chi2_m[i]})
 
 #------------------------------------------------------------------
 # Debuggin sometimes needed
@@ -112,10 +127,10 @@ chi2_2 = geom.get_chi2(f_valid,g_valid,ef_valid)
 
 from collections import Counter
 
-if np.mean(np.abs(chi2-chi2_2))>0.1:
+if np.mean(np.abs(chi2_valid-chi2_2))>0.1:
 	print '\n-----------------ATTENTION---------------------'
 	print 'Original chi2 from MFR Matlab'
-	print 'chi2: %.5f +- %.5f' % (np.mean(chi2), np.std(chi2))  
+	print 'chi2: %.5f +- %.5f' % (np.mean(chi2_valid), np.std(chi2_valid))  
 	print 'Value calculated for same reconstructions but with bib_geom.py code'
 	print 'chi2_2: %.5f +- %.5f' % (np.mean(chi2_2), np.std(chi2_2))
 	print("""\nThe values of chi2_2 and chi2 should be similar
@@ -126,7 +141,7 @@ probably belong to events where detectors saturated.""")
 
 	# one way to identify such shots
 	problematic_events = np.abs(chi2_2-1)> 0.1
-	problematic_pulses = pulse[problematic_events]
+	problematic_pulses = pulse_valid[problematic_events]
 	problems_dict = Counter(problematic_pulses)
 	print '\nProblematic pulses'
 	for pulse in problems_dict.keys():
