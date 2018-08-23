@@ -4,7 +4,6 @@ import numpy as np
 
 import sys
 sys.path.insert(0, '../bib/')
-import bib_metrics 
 import bib_geom
 import bib_data
 
