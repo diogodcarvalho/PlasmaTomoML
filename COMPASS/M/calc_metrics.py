@@ -77,8 +77,8 @@ e_power = (np.sum(g_valid,axis = (1,2)) - np.sum(g_m, axis = (1,2)))/np.sum(g_va
 R_centroid, Z_centroid  = bib_geom.get_centroid(g_valid)
 R_nn_centroid, Z_nn_centroid = bib_geom.get_centroid(g_m)
 
-R_error = np.abs(R_centroid-R_nn_centroid)*1e3
-Z_error = np.abs(Z_centroid-Z_nn_centroid)*1e3
+e_R = np.abs(R_centroid-R_nn_centroid)*1e3
+e_Z = np.abs(Z_centroid-Z_nn_centroid)*1e3
 
 #------------------------------------------------------------------
 # Chi2 Values
@@ -94,8 +94,8 @@ print 'ssim: %.4f +- %.4f' % (np.mean(ssim), np.std(ssim))
 print 'psnr: %.2f +- %.2f' % (np.mean(psnr), np.std(psnr))
 print 'nrmse: %.2f +- %.2f' % (np.mean(nrmse), np.std(nrmse))
 print 'e_power: %.2f +- %.2f' % (np.mean(e_power), np.std(e_power)) 
-print 'R_error: %.2f +- %.2f' % (np.mean(R_error), np.std(R_error)) 
-print 'Z_error: %.2f +- %.2f' % (np.mean(Z_error), np.std(Z_error))
+print 'e_R: %.2f +- %.2f' % (np.mean(e_R), np.std(e_R)) 
+print 'e_Z: %.2f +- %.2f' % (np.mean(e_Z), np.std(e_Z))
 print 'chi2_m: %.2f +- %.2f' % (np.mean(chi2_m), np.std(chi2_m))
 
 
@@ -107,14 +107,14 @@ import csv
 print '\nCreating :', save_path + 'metrics.csv'
 
 with open(save_path + 'metrics.csv', 'w') as csvfile:
-	fieldnames = ['pulse', 't', 'ssim', 'psnr', 'nrmse', 'e_power', 'R_error', 'Z_error', 'chi2_m']
+	fieldnames = ['pulse', 't', 'ssim', 'psnr', 'nrmse', 'e_power', 'e_R', 'e_Z', 'chi2_m']
 	writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
 	writer.writeheader()
 	for i in range(pulse_valid.shape[0]):
 		writer.writerow({'pulse': pulse_valid[i], 't': t_valid[i] , 'ssim': ssim[i],
 		 'psnr': psnr[i], 'nrmse': nrmse[i], 'e_power': e_power[i], 
-		 'R_error': R_error[i], 'Z_error': Z_error[i], 'chi2_m': chi2_m[i]})
+		 'e_R': e_R[i], 'e_Z': e_Z[i], 'chi2_m': chi2_m[i]})
 
 #------------------------------------------------------------------
 # Debuggin sometimes needed

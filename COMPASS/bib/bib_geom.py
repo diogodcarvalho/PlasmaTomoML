@@ -216,7 +216,8 @@ class Geometry:
 		SXRA - working detectors from camera A (0-35)
 		SXRB - working detectors from camera B (35-70)
 		SXRF - working detectors from camera F (70-90)
-		SXR  - array of booleans with size 90 ((0 -> LOS not used, 1-> LOS used)
+		SXR  - full list of working detectors
+		SXR_bool - array of booleans with size 90 ((0 -> LOS not used, 1-> LOS used)
 		detector_id - auxiliar to define name of geometry files to open ('0'->'A','1'->'B','5'->'F')
 		los_mask - line of sight mask for the given geometry aka contribution matrix 
 				   (includes non-selected cameras)
@@ -257,8 +258,8 @@ class Geometry:
 		print 'SXRB :', self.SXRB
 		print 'SXRF :', self.SXRF
 		
-		SXRW = self.SXRA.tolist() + self.SXRB.tolist() + self.SXRF.tolist()
-		self.SXR =  [i in SXRW for i in range(90)]
+		self.SXR = self.SXRA.tolist() + self.SXRB.tolist() + self.SXRF.tolist()
+		self.SXR_bool =  [i in self.SXR for i in range(90)]
 		self.los_mask = self.get_los_mask()
 
 	def get_los_COMPASS(self):
@@ -528,15 +529,15 @@ class Geometry:
 		return mask 
 
 
-	def get_virtual_bolometers(self,tomo, only_working = False, clip_zero = True):
+	def get_virtual_cameras(self,tomo, only_working = False, clip_zero = True):
 		"""
 		From existent tomography estimate correspondent 
-		bolometer measurement 
+		detector measurement 
 		Inputs: 
 			tomo - tomographic reconstructions (N_reconstruction, N_ROWS, N_COLS)
 			only_working - if True, non-working detectors are set to zero
 		Outputs:
-			virtual - virtual bolometer measurement [kW/m^-2] (N_reconstruction, self.N_LOS)
+			virtual - virtual detector measurement [kW/m^-2] (N_reconstruction, self.N_LOS)
 		"""
 
 		if clip_zero:
@@ -560,15 +561,15 @@ class Geometry:
 			print 'n_parts :', n_parts
 			
 			print tomo[0:max_dim].shape, tomo[0:max_dim,:,:].shape
-			virtual = self.get_virtual_bolometers(tomo[0:max_dim,:,:])
+			virtual = self.get_virtual_cameras(tomo[0:max_dim,:,:])
 
 			for i in range(1,n_parts):
 				print tomo[i*max_dim:(i+1)*max_dim,:,:].shape
-				virtual_part = self.get_virtual_bolometers(tomo[i*max_dim:(i+1)*max_dim])
+				virtual_part = self.get_virtual_cameras(tomo[i*max_dim:(i+1)*max_dim])
 				virtual = np.concatenate((virtual, virtual_part), axis = 0)
 				print 'aa: ', virtual_part.shape, virtual.shape
 
-			virtual_part = self.get_virtual_bolometers(tomo[n_parts*max_dim:])
+			virtual_part = self.get_virtual_cameras(tomo[n_parts*max_dim:])
 			virtual = np.concatenate((virtual, virtual_part), axis = 0)
 			print 'aa: ', virtual_part.shape, virtual.shape
 
@@ -580,56 +581,15 @@ class Geometry:
 				virtual = np.pad(virtual,((0,0),(0,20)),'constant', constant_values= 0)
 
 			if only_working:
-				virtual = virtual*self.SXR
+				virtual = virtual*self.SXR_bool
 
 		return virtual
-
-
-	def get_virtual_bolometers_2(self,tomo, los_mask = None):
-		"""
-		From existent tomography estimate correspondent 
-		bolometer measurement using COMPASS oficial contribution matrix
-		only works for pulses in range 8467-13213 (corresponding to geometry 201410)
-		Inputs: 
-			tomo - tomographic reconstructions (N_reconstruction, N_ROWS, N_COLS)
-		Outputs:
-			virtual - virtual bolometer measurement [kW/m^-2] (N_reconstruction, N_LOS)
-		"""
-
-		# LOS_MASK = scipy.io.loadmat('../data/Tmat_new.mat')
-		# LOS_MASK = LOS_MASK['To']
-		# print LOS_MASK.shape
-		# LOS_MASK = [LOS_MASK[:,i].reshape(N_COLS,N_ROWS).transpose() for i in range(90)]
-		# LOS_MASK = np.asarray(LOS_MASK)
-		# print LOS_MASK.shape
-
-		LOS_MASK = scipy.io.loadmat('../data/T_aaa.mat')
-		LOS_MASK = np.asarray(LOS_MASK['T'])
-		print LOS_MASK.shape
-		LOS_MASK = [LOS_MASK[i,:].reshape(N_COLS,N_ROWS).transpose() for i in range(49)]
-		LOS_MASK = np.asarray(LOS_MASK)
-
-		# plt.figure()
-		# plt.imshow(np.sum(LOS_MASK, axis = 0), origin = 'lower')
-		# plt.colorbar()
-		# plt.show()
-
-		tomo = np.clip(tomo, a_min = 0, a_max = None)
-		
-		tomo = np.expand_dims(tomo, axis=1)
-
-		virtual = tomo*LOS_MASK
-
-		virtual = np.sum(virtual, axis = (-2,-1))
-		
-		return virtual	
-
 
 	def get_chi2(self,detector, tomo, error_detector):
 
 		#tomo = np.clip(tomo, a_min = 0, a_max = None)
 
-		virtual = self.get_virtual_bolometers(tomo)
+		virtual = self.get_virtual_cameras(tomo)
 
 		if detector.ndim == 1:
 			detector = detector[np.newaxis,:]
@@ -641,48 +601,13 @@ class Geometry:
 
 		chi2 = np.divide(chi2, error_detector)
 
-		chi2 = chi2[:,self.SXR]
+		chi2 = chi2[:,self.SXR_bool]
 		
 		chi2 = chi2**2
 		
 		chi2 = np.sum(chi2, axis = 1)
 
-		chi2 /= np.float32(np.sum(self.SXR))
-
-		return chi2
-
-	def get_chi2_2(self,detector, virtual, error_detector):
-
-		print 'detector---------------------------'
-		print detector[self.SXR]
-		print 'virtual----------------------------' 
-		print virtual[self.SXR]
-		print 'error------------------------------'
-		print error_detector[self.SXR]
-
-		if detector.ndim == 1:
-			detector = detector[np.newaxis,:]
-			error_detector = error_detector[np.newaxis,:]
-			virtual = virtual[np.newaxis,:]
-
-		
-
-		chi2 = virtual-detector
-
-		print 'v-d --------------------------------------'
-		print chi2[0,self.SXR]
-		print 'v-d/error --------------------------------'
-		print chi2[0,self.SXR]/error_detector[0,self.SXR]
-
-		chi2 = np.divide(chi2, error_detector)
-
-		chi2 = chi2[:,self.SXR]
-		
-		chi2 = chi2**2
-		
-		chi2 = np.sum(chi2, axis = 1)
-
-		chi2 /= np.float32(np.sum(self.SXR))
+		chi2 /= np.float32(np.sum(self.SXR_bool))
 
 		return chi2
 
@@ -693,7 +618,7 @@ class Geometry:
 		R,Z = get_vessel_COMPASS()
 
 		plt.figure()
-		for sxr,ri,rf,zi,zf,ri2,rf2,zi2,zf2 in zip(self.SXR, Ri,Rf,Zi,Zf,Ri2,Rf2,Zi2,Zf2):
+		for sxr,ri,rf,zi,zf,ri2,rf2,zi2,zf2 in zip(self.SXR_bool, Ri,Rf,Zi,Zf,Ri2,Rf2,Zi2,Zf2):
 			
 			if sxr:
 				plt.plot((ri,ri2),(zi,zi2),'r')
