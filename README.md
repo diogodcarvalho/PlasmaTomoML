@@ -17,6 +17,15 @@ One must have installed and configured the following programs and packages to ru
 - [Python 2](https://www.python.org/downloads/)
 - [Theano](http://deeplearning.net/software/theano/)
 - [Keras](https://keras.io/) (optimized to run on top of Theano)
+- Edit `~/.keras/keras.json` to contain :  
+   - "image_data_format": "channels_first"
+   - "backend" : "theano"
+   
+**Note** : Running the NN implemetation, as it is, using TensorFlow backend for Keras is also possible but the performance will be considerably slower. If you pretend to use TensorFlow and maintain the same performance edit `~/.keras/keras.json` to contain :  
+   - "image_data_format": "channels_last"
+   - "backend" : "tensorflow"
+
+and make the necessary changes in function `resize_NN_image()` (present in `COMPASS/bib/bib_utils.py` and `JET/bib/bib_utils.py`) to ensure the channel axis  the last one. 
 
 ## Access to Tomography Databases 
 
