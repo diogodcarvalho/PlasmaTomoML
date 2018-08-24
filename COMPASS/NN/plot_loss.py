@@ -11,8 +11,8 @@ loadtxt = np.loadtxt(fname,skiprows = 1,usecols = (2,3,4))
 print loadtxt.shape
 
 i = loadtxt[:,0]
-loss_train = loadtxt[:,1]*10**3
-loss_valid = loadtxt[:,2]*10**3
+loss_train = loadtxt[:,1]
+loss_valid = loadtxt[:,2]
 
 # ----------------------------------------------------------
 # Plot loss function
