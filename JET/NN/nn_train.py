@@ -28,7 +28,6 @@ g = bib_utils.resize_NN_image(g, training = True)
 print 'g:', g.shape, g.dtype
 print 'f:', f.shape, f.dtype
 
-
 # ------------------------------------------------------------------------
 # Divide into training, validation and test set 
 
