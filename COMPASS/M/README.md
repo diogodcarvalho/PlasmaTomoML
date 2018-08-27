@@ -5,6 +5,7 @@
       - `ratio` list with percentage of data to training/validation/test set (Default = [.9,.1] no test set)
       - `save_path` directory in which all outputs will be saved (Default = './Results/')
    - Outputs:
+      - `Results/` directory where all further information will be saved
       - `tomo_COMPASS.npz` contains all tomography relevant information (detector values, tomograms, etc...) and training/validation set index division
       - `tomo_GEOM.npz` contains information about camera geometry that is used in these reconstructions
  - Notes:
