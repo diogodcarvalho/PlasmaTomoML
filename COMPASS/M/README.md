@@ -37,10 +37,10 @@
     - `LOS/` directory with all regularization patterns as .png files, is located inside `save_path`
 
 <p align="center">
-  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/README_examples/JET_LOS_4.png width="200" />
-  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/README_examples/JET_LOS_9.png width="200" /> 
-  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/README_examples/JET_LOS_14.png width="200" />
-  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/README_examples/JET_LOS_21.png width="200" />
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/COMPASS/M/README_examples/COMPASS_LOS_1.png width="200" />
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/COMPASS/M/README_examples/COMPASS_LOS_20.png width="200" /> 
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/COMPASS/M/README_examples/COMPASS_LOS_27.png width="200" />
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/COMPASS/M/README_examples/COMPASS_LOS_56.png width="200" />
 </p>
 
 ## To calculate quality metrics
