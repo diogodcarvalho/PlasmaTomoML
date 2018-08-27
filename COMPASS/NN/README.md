@@ -11,8 +11,7 @@ The NN was implemented using the Keras library, the building blocks of the NN ar
 
 ## To prepare the dataset
 
-Different options on which type of dataset we want to use for the training are possible. Choose one of the following deppending on your 
-intent.
+Different options to generate the dataset used for the training of the NN exist. Choose one of the following deppending on your intent.
 
 #### Option 1 
 
@@ -28,7 +27,7 @@ If the geometry you want to apply the NN coincides with the geometry used to gen
       - `tomo_COMPASS.npz` contains all tomography relevant information (detector values, tomograms, etc...) and training/validation/test set index division
       - `tomo_GEOM.npz` contains information about camera geometry that is used in these reconstructions
 
-In this case the training/validation/test set belong to the same group of *.mat files generated with the same geometry. No change are made in the detector values used as input of the NN.
+In this case the training/validation/test sets belong to the same group of *.mat files generated with the same geometry. No changes are made in the detector values used as input of the NN.
     
 #### Option 2
 
@@ -51,7 +50,7 @@ If the geometry you want to apply the NN does not coincide with the geometry use
     - Notes:
       - if if `test_set_available = False` the files which depend on the existance of a test set (ex. `calc_metrics.py`, `plot_comparison.py`) cannot be used.
       
-In this case the training/validation set belong to a group of reconstructions computed for a camera geometry different to the one we wish to  apply the NN. The original detector values are disregarded and virtual detectors (based on the new geometry) are computed in the old tomograms. These virtual detectors will be the ones used as inputs of the NN. The test set (if it exists) is composed of tomograms obtained for the new geometry.
+In this case the training/validation sets belong to a group of reconstructions computed for a camera geometry different to the one we wish to  apply the NN. The original detector values are disregarded and virtual detectors (based on the new geometry) are computed in the old tomograms. These virtual detectors will be the ones used as inputs of the NN. The test set (if it exists) is composed of tomograms obtained for the new geometry.
 
 ## To train the NN
 
