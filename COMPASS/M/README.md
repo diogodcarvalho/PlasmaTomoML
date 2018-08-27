@@ -35,7 +35,7 @@
     - `loss_log.png` loss function evolution (example below)
 
 <p align="center">
-  <img src="https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/NN/README_examples/loss_log.png" width="400"/>
+  <img src="https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/COMPASS/M/README_examples/loss_log.png" width="400"/>
 </p> 
 
 ## To plot the regularization patterns 
