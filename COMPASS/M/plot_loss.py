@@ -19,8 +19,8 @@ loss_train = loadtxt[:,1]
 print 'Creating :', save_path + 'loss_log.png'
 
 plt.figure()
-plt.plot(i,loss_train,label = 'training')
-plt.xlabel('# epoch')
+plt.plot(i/1e3,loss_train,label = 'training')
+plt.xlabel('# epoch (10$^3$)')
 plt.ylabel('$\mathcal{L}$ (kW/m$^3$)')
 plt.ylim([0,np.max(loss_train)*1.05])
 plt.grid(True)
