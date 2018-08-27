@@ -24,7 +24,19 @@
     - `train.log` stores training set loss function error during training
     - `M.npy` final matrix obtained
   - Notes:
-    - The fitting process can be stopped at any point by pressing Ctrl+c, all the files output will still created and saved
+    - The fitting process can be terminated at any point by pressing Ctrl+c, all the files output will still created and saved
+    
+## To plot the loss function behaviour
+
+- Run `plot_loss.py` to plot the training loss evolution during training 
+  - User defined parameters:
+    - `save_path` directory in which the 'train.log' is located and where all outputs will be saved (Default = './Results/')
+  - Outputs:
+    - `loss_log.png` loss function evolution (example below)
+
+<p align="center">
+  <img src="https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/NN/README_examples/loss_log.png" width="400"/>
+</p> 
 
 ## To plot the regularization patterns 
 
