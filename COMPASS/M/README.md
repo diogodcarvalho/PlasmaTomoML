@@ -70,7 +70,7 @@
       - If you only wish to calculate the quality metrics run `calc_metrics.py`
 
 <p align="center">
-  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/M/README_examples/JET_89077_48.6.png width="700"/>
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/COMPASS/M/README_examples/COMPASS_10160_1.231.png width="700"/>
 </p> 
  
  
