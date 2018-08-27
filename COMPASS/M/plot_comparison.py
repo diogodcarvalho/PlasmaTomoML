@@ -5,15 +5,16 @@ import numpy as np
 import sys
 sys.path.insert(0, '../bib/')
 import bib_geom
-import bib_data
 
 # -------------------------------------------------------------------------
-# Load data 
-# File selected needs to be the same one in which the matrix M was fitted
-# since we will be using the validation set previously defined
+print '\nLoad data'
 
-data_directory = '../data/Reconstructions/'
-f,g,_,_,t,_,pulse = bib_data.get_tomo_COMPASS(data_directory,  flatten = False)
+save_path = './Results_virtual/'
+tomo_COMPASS = np.load(save_path + 'tomo_COMPASS.npz')
+f = tomo_COMPASS['f']
+g = tomo_COMPASS['g']
+t = tomo_COMPASS['t']
+pulse = tomo_COMPASS['pulse']
 
 print 'g:', g.shape, g.dtype
 print 'f:', f.shape, f.dtype
@@ -21,17 +22,12 @@ print 't:', t.shape, t.dtype
 print 'pulse:', pulse.shape, pulse.dtype 
 
 # -------------------------------------------------------------------------
-# Load sets indices and keep only the validation one
-# Choose the directory in wich this information was stored
-# output files of this script will also be stored there
+print '\nKeep test set'
 
-save_path = './Results/'
-indeces = np.load( save_path + './i_divided.npz')
-
-g_valid = g[indeces['i_valid']]
-f_valid = f[indeces['i_valid']]
-t_valid = t[indeces['i_valid']]
-pulse_valid = pulse[indeces['i_valid']]
+f_valid = f[tomo_COMPASS['i_valid']]
+g_valid = g[tomo_COMPASS['i_valid']]
+t_valid = t[tomo_COMPASS['i_valid']]
+pulse_valid = pulse[tomo_COMPASS['i_valid']]
 
 print 'g_valid:', g_valid.shape, g_valid.dtype
 print 'f_valid:', f_valid.shape, f_valid.dtype
@@ -43,16 +39,18 @@ if not os.path.exists(save_path + 'COMPARE/'):
     os.makedirs(save_path + 'COMPARE/')
 
 # -------------------------------------------------------------------------
-# Import matrix and perform new reconstructions (only in validation set)
-# Choose the directory in wich it was stored
-# output files of this script will also be stored there
+print '\nCalculate Reconstructions'
 
-save_path = './Results/'
 M = np.load(save_path + 'M.npy')
 
 g_m = np.dot(M,f_valid.transpose()).transpose()
 g_m = g_m.reshape((g_m.shape[0],bib_geom.N_ROWS,bib_geom.N_COLS))
+
 print 'g_m :', g_m.shape, g_m.dtype
+
+# Uncomment if you decide to clip mininimum value of images to zero
+# g_valid = np.clip(g_valid, a_min = 0, a_max = None)
+# g_m = np.clip(g_m, a_min = 0, a_max = None)
 
 # -------------------------------------------------------------------------
 

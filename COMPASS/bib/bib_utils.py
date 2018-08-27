@@ -71,14 +71,3 @@ def resize_NN_image(tomo, training = False):
 		tomo = np.concatenate((np.zeros((tomo.shape[0],tomo.shape[1],1),dtype = np.float32),tomo), axis =2)
 
 	return tomo
-
-def resize_detectors(f):
-	"""
-	Pads zeros to the detectors values (since camera F was removed)
-	Inputs :
-		f - original detectors shapped (n,m)
-	Outputs:
-		f_pad - new padded detectors (n,90)
-	"""
-	f_pad = np.pad(f,((0,0),(0,90-f.shape[1])),'constant', constant_values= 0)
-	return f_pad

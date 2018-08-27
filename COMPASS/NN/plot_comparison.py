@@ -9,13 +9,16 @@ import bib_geom
 import bib_data
 import bib_utils
 
-# -------------------------------------------------------------------------
-# Load data 
-# File selected needs to be the same one in which the NN was trained
-# since we will be using the test set previously defined
 
-data_directory = '../data/Reconstructions/'
-f,g,_,_,t,_,pulse = bib_data.get_tomo_COMPASS(data_directory,  flatten = False)
+# -------------------------------------------------------------------------
+print '\nLoad data'
+
+save_path = './Results_virtual/'
+tomo_COMPASS = np.load(save_path + 'tomo_COMPASS.npz')
+f = tomo_COMPASS['f']
+g = tomo_COMPASS['g']
+t = tomo_COMPASS['t']
+pulse = tomo_COMPASS['pulse']
 
 print 'g:', g.shape, g.dtype
 print 'f:', f.shape, f.dtype
@@ -23,17 +26,12 @@ print 't:', t.shape, t.dtype
 print 'pulse:', pulse.shape, pulse.dtype 
 
 # -------------------------------------------------------------------------
-# Load sets indices and keep only the test one
-# Choose the directory in wich this information was stored
-# output files of this script will also be stored there
+print '\nKeep test set'
 
-save_path = './Results/'
-indeces = np.load( save_path + './i_divided.npz')
-
-g_test = g[indeces['i_test']]
-f_test = f[indeces['i_test']]
-t_test = t[indeces['i_test']]
-pulse_test = pulse[indeces['i_test']]
+f_test = f[tomo_COMPASS['i_test']]
+g_test = g[tomo_COMPASS['i_test']]
+t_test = t[tomo_COMPASS['i_test']]
+pulse_test = pulse[tomo_COMPASS['i_test']]
 
 print 'g_test:', g_test.shape, g_test.dtype
 print 'f_test:', f_test.shape, f_test.dtype
@@ -43,7 +41,6 @@ print 'pulse_test:', pulse_test.shape, pulse_test.dtype
 if not os.path.exists(save_path + 'COMPARE/'):
     print 'Creating directory ', save_path + 'COMPARE/'
     os.makedirs(save_path + 'COMPARE/')
-
 
 #------------------------------------------------------------------
 # Initialize NN for given trained weights

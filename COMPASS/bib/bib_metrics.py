@@ -136,6 +136,7 @@ def plot_metric_pixel(metric, title, save_path, vmin,vmax,clb_legend = None):
 	else:
 		cmap = cmapX
 
+	print 'Creating: ', save_path + title + '.png'
 	plt.figure()
 	plt.imshow(metric,vmin = vmin, vmax = vmax, origin = 'lower', cmap = cmap, extent = [R_MIN, R_MAX, Z_MIN, Z_MAX])
 	plt.title(title)
@@ -146,3 +147,4 @@ def plot_metric_pixel(metric, title, save_path, vmin,vmax,clb_legend = None):
 		clb.ax.set_title(clb_legend)
 	plt.savefig(save_path + title + '.png',dpi=300,bbox_inches='tight')
 	plt.close()
+

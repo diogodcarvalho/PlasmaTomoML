@@ -1,34 +1,49 @@
 
-import os
-import h5py
 import glob
 import scipy.io
 import numpy as np
 
-def get_tomo_MFR(data_directory, subsampling = False):
+def get_tomo_MFR(data_directory, subsampling = 1, flatten = False, verbose= False):
 	"""
-	Collects the reconstructions performed with MFR 
-	algorithm (implemented in Matlab) and saves the needed information
-	for the training of the NN in tomo_COMPASS.hdf in the same directory. 
+	Reads all *.mat files in data_directory, which contain the reconstructions
+	performed with the original MFR algorithm implemented in Matlab, and 
+	returns the data present in those files. 
 	Only reconstructions with |chi2-1|<0.05 are kept.
-	Also stores tomo_GEOM.npz which contains the info about the cameras used
 
 	Inputs:
 		data_directory - path directory where reconstructions are saved
-		subsampling    - (int) ex. 4 means store at every 4th reconstruction (default is no subsampling)
+		subsampling - (int) ex. 4 means store at every 4th reconstruction (default is no subsampling)
+		flatten - (bool) if True flatten tomography image to 1D array
+		verbose - (bool) if True writes read file information
+	Outputs:
+		sxr - measurement from SXR cameras (includes non active) [kW/m^-2]
+		tomo - reconstruction [kW/m^-3]
+		esxr - expected error from SXR cameras
+		sxrfit - virtual bolometers measures [kW/m^-2]
+		t - time corresponding to time
+		chi2 - chi2 values
+		pulses - list of pulses
+		SXRA - detectors used from camera A
+		SXRB - "" B
+		SXRF - "" F
 	"""
 
-	# output *.hdf file name, will be stored in the same directory as the *.mat files
-	output_fname = data_directory + 'tomo_COMPASS.hdf'
-	new_file = h5py.File(output_fname, 'w')
+	t = []
+	tomo = []
+	sxr = []
+	esxr = []
+	chi2 = []
+	sxrfit = []
+	pulses = []
 
-	n_reconstr = 0
+	print 'Reading directory: ', data_directory
 
 	for filename in glob.glob(data_directory + '*.mat'):
 
 		pulse = filename[filename.find('shot')+len('shot'):filename.find('_reg')]
 
-		print filename
+		if verbose:
+			print filename
 
 		f = scipy.io.loadmat(filename)
 
@@ -37,59 +52,67 @@ def get_tomo_MFR(data_directory, subsampling = False):
 		#
 		# G_final	- reconstructions (#time_steps, #pixels)
 		# tvec		- time vector 
-		# CHI2 		- chi^2 values (~1)
+		# CHI2      - chi^2 values (~1)
 		# Y 		- input signal from detectors (#time_steps, #detectors)
 		# Yrfit 	- virtual signals from detectors after reconstruction
 		# dets 		- list of detectors used
 		# dY 		- expected error of detectors
 		#------------------------------------------------------------------
 
-		print f.keys()
+		t_pulse = f['tvec'][:][0]
+		tomo_pulse =  np.swapaxes(np.swapaxes(f['G_final'][:],0,2),1,2)
+		sxr_pulse = f['Y'][:]
+		esxr_pulse = f['dY'][:]
+		chi2_pulse = f['CHI2'][:,0]
+		sxrfit_pulse = f['Yrfit'][:]
 
-		t = f['tvec'][:][0]
-		tomo =  np.swapaxes(np.swapaxes(f['G_final'][:],0,2),1,2)
-		SXR = f['Y'][:]
-		eSXR = f['dY'][:]
-		CHI2 = f['CHI2'][:,0]
-		SXRfit = f['Yrfit'][:]
+		if verbose:
+			print pulse, t_pulse.shape, t_pulse.dtype, tomo_pulse.shape, tomo_pulse.dtype, sxr_pulse.shape, sxr_pulse.dtype, chi2_pulse.shape,\
+			esxr_pulse.shape, esxr_pulse.dtype
 
-		print pulse, t.shape, t.dtype, tomo.shape, tomo.dtype, SXR.shape, SXR.dtype, CHI2.shape,\
-		eSXR.shape, eSXR.dtype
+		# remove bad reconstructions
+		index = abs(chi2_pulse-1) < 0.05
+		t_pulse = t_pulse[index]
+		tomo_pulse = tomo_pulse[index,:,:]
+		sxr_pulse = sxr_pulse[index,:]
+		esxr_pulse = esxr_pulse[index,:]
+		sxrfit_pulse = sxrfit_pulse[index,:]
+		chi2_pulse = chi2_pulse[index]
 
-		index = abs(CHI2-1) < 0.05
+		# subsampling
+		t_pulse = t_pulse[::subsampling]
+		tomo_pulse = tomo_pulse[::subsampling,:,:]
+		sxr_pulse = sxr_pulse[::subsampling,:]
+		esxr_pulse = esxr_pulse[::subsampling,:]
+		sxrfit_pulse = sxrfit_pulse[::subsampling,:]
+		chi2_pulse = chi2_pulse[::subsampling]
 
-		tomo = tomo[index,:,:]
-		SXR = SXR[index,:]
-		eSXR = eSXR[index,:]
-		SXRfit = SXRfit[index,:]
-		t = t[index]
-		CHI2 = CHI2[index]
+		# flatten
+		if flatten:
+			tomo_pulse = tomo_pulse.reshape(tomo_pulse.shape[0],-1)
 
-		if subsampling :
-			
-			assert isinstance(subsampling, int)
+		if verbose:
+			print pulse, t_pulse.shape, t_pulse.dtype, tomo_pulse.shape, tomo_pulse.dtype, sxr_pulse.shape, sxr_pulse.dtype, esxr_pulse.shape, esxr_pulse.dtype
 
-			index = [i%subsampling==0 for i in range(len(t))]
-			tomo = tomo[index,:,:]
-			SXR = SXR[index,:]
-			eSXR = eSXR[index,:]
-			SXRfit = SXRfit[index,:]
-			t = t[index]
-			CHI2 = CHI2[index]
+		for i in range(len(t_pulse)):
+			t.append(t_pulse[i])
+			tomo.append(tomo_pulse[i])
+			sxr.append(sxr_pulse[i])
+			esxr.append(esxr_pulse[i])
+			sxrfit.append(sxrfit_pulse[i])
+			chi2.append(chi2_pulse[i])
+			pulses.append(int(pulse))
 
-		n_reconstr += len(t)
+	t = np.asarray(t, dtype = np.float32)
+	tomo = np.asarray(tomo, dtype = np.float32)/1e3
+	sxr = np.asarray(sxr, dtype = np.float32)/1e3
+	esxr = np.asarray(esxr, dtype = np.float32)/1e3
+	sxrfit = np.asarray(sxrfit, dtype = np.float32)/1e3
+	chi2 = np.asarray(chi2, dtype = np.float32)
+	pulses = np.asarray(pulses)
 
-		g = new_file.create_group(pulse)
-		g.create_dataset('t', data=t)
-		g.create_dataset('SXR', data=SXR)
-		g.create_dataset('eSXR', data=eSXR)
-		g.create_dataset('tomo', data=tomo)
-		g.create_dataset('SXRfit', data=SXRfit)
-		g.create_dataset('CHI2', data=CHI2)
-
-		print pulse, t.shape, t.dtype, tomo.shape, tomo.dtype, SXR.shape, SXR.dtype, eSXR.shape, eSXR.dtype
-
-	print '# reconstructions :', n_reconstr
+	if verbose:
+		print pulses.shape, t.shape, tomo.shape, sxr.shape, esxr.shape, sxrfit.shape, pulses.shape
 
 	# save detectors and last pulse used. Later it will be needed to know the geometry
 	# so the chi2 value can be correctly calculated 
@@ -97,128 +120,6 @@ def get_tomo_MFR(data_directory, subsampling = False):
 	SXRA = np.squeeze(f['dets'][0][0]) - 1
 	SXRB = np.squeeze(f['dets'][0][1]) - 1
 	SXRF = np.squeeze(f['dets'][0][2]) - 1
-	print 'SXRA :', SXRA
-	print 'SXRB :', SXRB
-	print 'SXRF :', SXRF
+	
 
-	np.savez(data_directory + 'tomo_GEOM.npz', SXRA = SXRA, SXRB = SXRB, SXRF = SXRF, last_pulse = pulse)
-
-def get_pulse_COMPASS(data_directory, pulse, flatten = True):
-	"""
-	Get Bolometer measures and reconstructions for specific pulse
-	Inputs: 
-		fname - path to file
-		pulse - ID of pulse 
-		flatten - If true g is returned flattened
-	Outputs:
-		t - time of reconstructions [s]
-		f_data - measurement from SXR cameras (includes non active) [kW/m^-2]
-		g_data - reconstruction [kW/m^-3]
-	"""
-	fname = data_directory + 'tomo_COMPASS.hdf'
-
-	# check if directory exists
-	if not os.path.exists(data_directory):
-		sys.exit('Non-existing directory')
-	else:
-		# check if already exists an *.hdf file, if not create it
-		if not os.path.exists():
-			print 'Creating *.hdf file ', data_directory + 'tomo_COMPASS.hdf'
-			get_tomo_MFR(data_directory, subsampling = subsampling)
-
-	print 'Reading:', fname
-	f = h5py.File(fname, 'r')
-
-	f_data = []
-	g_data = []
-
-	group = f[pulse]
-	t = group['t'][:]
-	SXR = group['SXR'][:]/1e3
-	tomo = group['tomo'][:]/1e3
-
-	for i in range(len(t)):
-		f_data.append(SXR[i])
-		if flatten:
-			g_data.append(np.asarray(tomo[i,:,:]).flatten())
-		else:
-			g_data.append(np.asarray(tomo[i,:,:]))
-
-	f.close()
-
-	t = np.asarray(t, dtype = np.float32)
-	f_data = np.asarray(f_data, dtype = np.float32)
-	g_data = np.asarray(g_data, dtype = np.float32)
-
-	return t, f_data, g_data
-
-def get_tomo_COMPASS(data_directory, flatten = True, subsampling = False):
-	"""
-	Get Bolometer measures and reconstructions + errors
-	Inputs: 
-		fname - path to file
-		flatten - If true g is returned flattened
-	Outputs:
-		f_data - measurement from SXR cameras (includes non active) [kW/m^-2]
-		g_data - reconstruction [kW/m^-3]
-		ef_data - expected error from SXR cameras
-		fv_data - virtual bolometers measures [kW/m^-2]
-		t - time corresponding to time
-	"""
-
-	fname = data_directory + 'tomo_COMPASS.hdf'
-
-	# check if directory exists
-	if not os.path.exists(data_directory):
-		sys.exit('Non-existing directory')
-	else:
-		# check if already exists an *.hdf file, if not create it
-		if not os.path.exists(fname):
-			print 'Creating *.hdf file ', data_directory + 'tomo_COMPASS.hdf'
-			get_tomo_MFR(data_directory, subsampling = subsampling)
-
-	print 'Reading:', fname
-	f = h5py.File(fname, 'r')
-
-	f_data = []
-	g_data = []
-	ef_data = []
-	fv_data = []
-	t_data = []
-	chi2_data = []
-	pulse_data = []
-
-	for pulse in f:
-
-		group = f[pulse]
-		t = group['t'][:]
-		SXR = group['SXR'][:]/1e3
-		tomo = group['tomo'][:]/1e3
-		eSXR = group['eSXR'][:]/1e3
-		SXRfit = group['SXRfit'][:]/1e3
-		CHI2 = group['CHI2'][:]
-
-		for i in range(len(t)):
-			f_data.append(SXR[i])
-			ef_data.append(eSXR[i])
-			fv_data.append(SXRfit[i])
-			chi2_data.append(CHI2[i])
-			if flatten:
-				g_data.append(np.asarray(tomo[i,:,:]).flatten())
-			else:
-				g_data.append(np.asarray(tomo[i,:,:]))
-
-			pulse_data.append(pulse)
-			t_data.append(t[i])
-		
-	f.close()
-
-	f_data = np.asarray(f_data, dtype = np.float32)
-	g_data = np.asarray(g_data, dtype = np.float32)
-	ef_data = np.asarray(ef_data, dtype = np.float32)
-	fv_data = np.asarray(fv_data, dtype = np.float32)
-	chi2_data = np.asarray(chi2_data, dtype = np.float32)
-	pulse_data = np.asarray(pulse_data, dtype = np.float32)
-	t_data = np.asarray(t_data, dtype = np.float32)
-
-	return f_data, g_data, ef_data, fv_data,t_data,chi2_data,pulse_data
+	return sxr, tomo, esxr, sxrfit,t,chi2,pulses,SXRA,SXRB,SXRF

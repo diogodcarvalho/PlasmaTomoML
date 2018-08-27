@@ -4,42 +4,45 @@ import numpy as np
 
 import sys
 sys.path.insert(0, '../bib/')
-import bib_data
-import bib_utils
 import bib_geom 
+import bib_utils
 import bib_metrics 
 
 # -------------------------------------------------------------------------
-# Load data from tomograms obtained with MFR
+# Initialize geometry
 
-data_directory = '../data/Reconstructions/'
-f, g, ef,_,_,_,_ = bib_data.get_tomo_COMPASS(data_directory,  flatten = False)
+save_path = './Results/'
+geom = bib_geom.Geometry(save_path + 'tomo_GEOM.npz')
+
+# -------------------------------------------------------------------------
+print '\nLoad data'
+
+tomo_COMPASS = np.load(save_path + 'tomo_COMPASS.npz')
+f = tomo_COMPASS['f']
+g = tomo_COMPASS['g']
+ef = tomo_COMPASS['ef']
 
 print 'g:', g.shape, g.dtype
 print 'f:', f.shape, f.dtype
 print 'ef:', ef.shape, ef.dtype
 
 # -------------------------------------------------------------------------
-# Load sets indices and keep only the validation one
-# Choose the directory in wich this information was stored
+print '\nKeep test set'
 
-save_path = './Results/'
-indeces = np.load( save_path + './i_divided.npz')
+f_test = f[tomo_COMPASS['i_test']]
+g_test = g[tomo_COMPASS['i_test']]
+ef_test = ef[tomo_COMPASS['i_test']]
 
-g_test = g[indeces['i_valid']]
-f_test = f[indeces['i_valid']]
-ef_test = ef[indeces['i_valid']]
+print 'f_test:', f_test.shape
+print 'g_test:', g_test.shape
+print 'ef_test:', ef_test.shape
 
-print 'g_test:', g_test.shape, g_test.dtype
-print 'f_test:', f_test.shape, f_test.dtype
-print 'ef_test:', ef_test.shape, ef_test.dtype
-
-#------------------------------------------------------------------
-# Initialize NN for given trained weights
+# -------------------------------------------------------------------------
+print '\nInitialize NN'
 
 import nn_model
 
-# recover number of filters the NN was trained with
+# recover number of filters the NN was tested with
 with open(save_path + 'model_options.log') as inputfile:
  	for row in csv.reader(inputfile):
  		print row[0]
@@ -49,24 +52,21 @@ with open(save_path + 'model_options.log') as inputfile:
 # build model
 model = nn_model.build_model(filters)
 
-# load trained parameters
+# load tested parameters
 model_parameters = save_path + 'model_parameters.hdf'
 model.load_weights(model_parameters)
 
-#------------------------------------------------------------------
-# Initialize geometry
-
-geom = bib_geom.Geometry(data_directory + 'tomo_GEOM.npz')
-
-#------------------------------------------------------------------
+# -------------------------------------------------------------------------
 # Calculate quality metrics for different combinations of 
 # shutdown detectors
+
+print '\nCalculate Metrics'
 
 from copy import deepcopy
 from itertools import combinations
 
 # number of shutdown detectors at each time
-n_shutdown = 2
+n_shutdown = 1
 
 # list to store all metric values
 variables_i = [[] for i in range(7)] 
@@ -76,7 +76,7 @@ shutdown_detectors_combinations = combinations(geom.SXR,n_shutdown)
 
 for shutdown_detectors in shutdown_detectors_combinations:
 
-	sys.stdout.write("\r" + 'cameras: ' + str(shutdown_detectors))
+	sys.stdout.write("\r" + 'camera shutdown: ' + str(shutdown_detectors))
 	sys.stdout.flush()
 
 	f_dropout = deepcopy(f_test)
@@ -117,10 +117,7 @@ e_R = np.asarray(variables_i[4])
 e_Z = np.asarray(variables_i[5])
 chi2_nn = np.asarray(variables_i[6])
 
-#------------------------------------------------------------------
-# Mean values
-
-print '\nAverage Values ------------------------------'
+print '\nAverage Values'
 print 'ssim: %.4f +- %.4f' % (np.mean(ssim), np.std(ssim))
 print 'psnr: %.2f +- %.2f' % (np.mean(psnr), np.std(psnr))
 print 'nrmse: %.2f +- %.2f' % (np.mean(nrmse), np.std(nrmse))

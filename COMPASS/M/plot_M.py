@@ -22,9 +22,8 @@ if not os.path.exists(save_path + 'LOS/'):
 # -------------------------------------------------------------------------
 # Load vessel coordinates and lines of sight
 
-data_directory = '../data/Reconstructions/'
 r,z = bib_geom.get_vessel_COMPASS()
-geom = bib_geom.Geometry(data_directory + 'tomo_GEOM.npz')
+geom = bib_geom.Geometry(save_path + 'tomo_GEOM.npz')
 ri,rf,zi,zf = geom.get_los_COMPASS_2()
 
 # -------------------------------------------------------------------------

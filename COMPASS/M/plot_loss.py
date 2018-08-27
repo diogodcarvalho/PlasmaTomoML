@@ -7,12 +7,11 @@ import matplotlib.pyplot as plt
 
 save_path = './Results/'
 fname = save_path + 'train.log'
-loadtxt = np.loadtxt(fname,skiprows = 1,usecols = (2,3,4))
+loadtxt = np.loadtxt(fname,skiprows = 1,usecols = (1,2))
 print loadtxt.shape
 
 i = loadtxt[:,0]
 loss_train = loadtxt[:,1]
-loss_valid = loadtxt[:,2]
 
 # -------------------------------------------------------------------------
 # Plot loss function
@@ -21,8 +20,6 @@ print 'Creating :', save_path + 'loss_log.png'
 
 plt.figure()
 plt.plot(i,loss_train,label = 'training')
-plt.plot(i,loss_valid,label = 'validation')
-plt.plot((np.argmin(loss_valid),np.argmin(loss_valid)),(0,np.min(loss_valid)),'k--',label='min validation loss')
 plt.xlabel('# epoch')
 plt.ylabel('$\mathcal{L}$ (kW/m$^3$)')
 plt.ylim([0,np.max(loss_train)*1.05])

@@ -1,26 +1,18 @@
 
-import os
 import numpy as np
 np.random.seed(0)
 
 import sys
 sys.path.insert(0, '../bib/')
-import bib_data
 import bib_utils 
 
 # -------------------------------------------------------------------------
-# Directory to which all results will be saved
+print '\nLoad data'
 
-save_path = './Results/'
-if not os.path.exists(save_path):
-        print 'Creating directory ', save_path
-        os.makedirs(save_path)
-
-# -------------------------------------------------------------------------
-# Load data from tomograms obtained with MFR
-
-data_directory = '../data/Reconstructions/'
-f,g,_,_,_,_,_ = bib_data.get_tomo_COMPASS(data_directory,  flatten = False)
+save_path = './Results_virtual/'
+tomo_COMPASS = np.load(save_path + 'tomo_COMPASS.npz')
+f = tomo_COMPASS['f']
+g = tomo_COMPASS['g']
 
 # need to reshape image to match NN dimensions
 g = bib_utils.resize_NN_image(g, training = True)
@@ -28,27 +20,21 @@ g = bib_utils.resize_NN_image(g, training = True)
 print 'g:', g.shape, g.dtype
 print 'f:', f.shape, f.dtype
 
-# ------------------------------------------------------------------------
-# Divide into training, validation and test set 
+# -------------------------------------------------------------------------
+print '\nDefine training/validation sets'
 
-i_train, i_valid, i_test = bib_utils.divide_data(g.shape[0],ratio = [.8,.1,.1],test_set = True,random = False)
-
-f_valid = f[i_valid]
-g_valid = g[i_valid]
-f_train = f[i_train]
-g_train = g[i_train]
+f_train = f[tomo_COMPASS['i_train']]
+g_train = g[tomo_COMPASS['i_train']]
+f_valid = f[tomo_COMPASS['i_valid']]
+g_valid = g[tomo_COMPASS['i_valid']]
 
 print 'f_train:', f_train.shape
 print 'g_train:', g_train.shape
 print 'f_valid:', f_valid.shape
 print 'g_valid:', g_valid.shape
 
-# test set won't be used during training but we save the correspondent 
-# indices for later tests
-np.savez(save_path + 'i_divided', i_train = i_train, i_valid = i_valid, i_test = i_test)
-
-# ----------------------------------------------------------------------
-# Train the NN
+# -------------------------------------------------------------------------
+print '\nInitialize NN'
 
 import nn_model 
 import nn_callback 
@@ -86,6 +72,8 @@ opt = Adam(lr=lr)
 # Load and compile NN model
 model = nn_model.build_model(filters = filters, dropout_rate = dropout_rate)
 model.compile(loss=loss, optimizer=opt)
+
+print '\nStart Training'
 
 # start training
 # 2 files will be created

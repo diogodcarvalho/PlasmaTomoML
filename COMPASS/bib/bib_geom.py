@@ -206,6 +206,17 @@ def plot_full_pulse(g, t, pulse, vmin = 0, vmax = 1.5*10**3, output_file = 'anim
 #--------------------------------------------------------------------
 # SXR setup Dependent
 
+FIRST_SHOT_GEOM201410 = 8468
+LAST_SHOT_GEOM201410 = 13212
+
+FIRST_SHOT_GEOM201701 = 13213
+LAST_SHOT_GEOM201701 = 14883
+
+FIRST_SHOT_GEOM201708 = 14884
+LAST_SHOT_GEOM201708 = 16217
+
+N_LOS_MAX = 90
+
 class Geometry:
 	"""This class handles all the calculations related to line of sight geometry being it
 	contribution matrix, virtual detectors, chi2 calculation. 
@@ -231,35 +242,36 @@ class Geometry:
 		geometry_info = np.load(geometry_file)
 
 		last_pulse = int(geometry_info['last_pulse'])
-		print last_pulse
 		self.SXRA = geometry_info['SXRA']
 		self.SXRB = geometry_info['SXRB']
 		self.SXRF = geometry_info['SXRF']
 
-		if last_pulse < 8468:
+		if last_pulse < FIRST_SHOT_GEOM201410:
 			sys.exit('Geometry still neeeds to be implemented')
-		elif last_pulse < 13213:
+		elif last_pulse < LAST_SHOT_GEOM201410:
 			self.geometry = 201410
 			self.N_LOS = 90
 			self.detector_id = ['0','1','5']
-		elif last_pulse < 14884:
+		elif last_pulse < LAST_SHOT_GEOM201701:
 			self.geometry = 201701
 			self.N_LOS = 70
 			self.detector_id =  ['0','1']
-		elif last_pulse < 16217:
+			self.SXRF = np.asarray([])
+		elif last_pulse < LAST_SHOT_GEOM201708:
 			self.geometry = 201708
 			self.N_LOS = 70
 			self.detector_id = ['0','1']
+			self.SXRF = np.asarray([])
 		else:
 			sys.exit('Geometry still neeeds to be implemented')
 
-		print 'Initializing Geometry :', self.geometry
+		print '\nInitializing Geometry :', self.geometry
 		print 'SXRA :', self.SXRA
 		print 'SXRB :', self.SXRB
 		print 'SXRF :', self.SXRF
 		
 		self.SXR = self.SXRA.tolist() + self.SXRB.tolist() + self.SXRF.tolist()
-		self.SXR_bool =  [i in self.SXR for i in range(90)]
+		self.SXR_bool =  [i in self.SXR for i in range(N_LOS_MAX)]
 		self.los_mask = self.get_los_mask()
 
 	def get_los_COMPASS(self):
@@ -444,6 +456,7 @@ class Geometry:
 					pass
 
 		mask = np.array(mask, dtype = np.float32)
+		mask = np.pad(mask,((0,N_LOS_MAX-mask.shape[0]),(0,0),(0,0)),'constant', constant_values= 0)
 		print 'mask:', mask.shape, mask.dtype
 
 		if plot:
@@ -513,8 +526,8 @@ class Geometry:
 					except :
 						pass
 
-		mask = np.array(mask, dtype = np.float32)
-		mask /= float(2*N)
+		mask = np.array(mask, dtype = np.float32)/float(2*N)
+		mask = np.pad(mask,((0,N_LOS_MAX-mask.shape[0]),(0,0),(0,0)),'constant', constant_values= 0)
 		print 'mask:', mask.shape, mask.dtype
 
 		if plot:	
@@ -553,32 +566,24 @@ class Geometry:
 			assert tomo.shape[1:] == (N_ROWS,N_COLS)	
 			tomo = np.expand_dims(tomo, axis=1)
 
-		# arbitrary size choosen so memory does not blow-up (for 100.000 it does)
-		max_dim = 10000
+		# arbitrary size choosen so memory does not blow-up
+		max_dim = 1000
 		if tomo.shape[0] > max_dim:
 			
 			n_parts = int(tomo.shape[0]/max_dim)
-			print 'n_parts :', n_parts
 			
-			print tomo[0:max_dim].shape, tomo[0:max_dim,:,:].shape
-			virtual = self.get_virtual_cameras(tomo[0:max_dim,:,:])
+			virtual = self.get_virtual_cameras(tomo[0:max_dim,:,:],only_working,clip_zero)
 
 			for i in range(1,n_parts):
-				print tomo[i*max_dim:(i+1)*max_dim,:,:].shape
-				virtual_part = self.get_virtual_cameras(tomo[i*max_dim:(i+1)*max_dim])
+				virtual_part = self.get_virtual_cameras(tomo[i*max_dim:(i+1)*max_dim],only_working,clip_zero)
 				virtual = np.concatenate((virtual, virtual_part), axis = 0)
-				print 'aa: ', virtual_part.shape, virtual.shape
-
-			virtual_part = self.get_virtual_cameras(tomo[n_parts*max_dim:])
+				
+			virtual_part = self.get_virtual_cameras(tomo[n_parts*max_dim:],only_working,clip_zero)
 			virtual = np.concatenate((virtual, virtual_part), axis = 0)
-			print 'aa: ', virtual_part.shape, virtual.shape
 
-		else: 
+		else: 	
 			virtual = tomo*self.los_mask	
 			virtual = np.sum(virtual, axis = (-2,-1))
-
-			if self.geometry == 201701:
-				virtual = np.pad(virtual,((0,0),(0,20)),'constant', constant_values= 0)
 
 			if only_working:
 				virtual = virtual*self.SXR_bool

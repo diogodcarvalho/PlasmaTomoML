@@ -1,52 +1,29 @@
 
-import os
 import time
 import numpy as np
-import matplotlib.pyplot as plt 
-
-import sys
-sys.path.insert(0, '../bib/')
-import bib_data
-import bib_utils
 
 # -------------------------------------------------------------------------
-# Directory to which all results will be saved, changed as you which 
+print '\nLoad data'
 
 save_path = './Results/'
-if not os.path.exists(save_path):
-        print 'Creating directory ', save_path
-        os.makedirs(save_path)
+tomo_COMPASS = np.load(save_path + 'tomo_COMPASS.npz')
+f = tomo_COMPASS['f']
+g = tomo_COMPASS['g']
 
-# -------------------------------------------------------------------------
-# Load data from tomograms obtained with MFR
-
-data_directory = '../data/Reconstructions/'
-f,g,_,_,_,_,_ = bib_data.get_tomo_COMPASS(data_directory,  flatten = True)
-
-g = np.transpose(g)
-f = np.transpose(f)
+f = f.transpose()
+g = g.transpose()
 
 print 'g:', g.shape, g.dtype
 print 'f:', f.shape, f.dtype
 
-# ------------------------------------------------------------------------
-# Divide into training and validation set 
-# (no test set needed since it won't overfit)
-# if one wants the validation set can also be disregarded by setting ratio=[1.,0.]
+# -------------------------------------------------------------------------
+print '\nDefine training set'
 
-i_train, i_valid, _ = bib_utils.divide_data(g.shape[1],ratio = [.9,.1],test_set = False,random = False)
+f_train = f[:,tomo_COMPASS['i_train']]
+g_train = g[:,tomo_COMPASS['i_train']]
 
-g_valid = g[:,i_valid]
-f_valid = f[:,i_valid]
-g = g[:,i_train]
-f = f[:,i_train]
-
-print 'g_train:', g.shape, g.dtype
-print 'f_train:', f.shape, f.dtype
-print 'g_valid:', g_valid.shape, g_valid.dtype
-print 'f_valid:', f_valid.shape, f_valid.dtype
-
-np.savez(save_path + 'i_divided', i_train = i_train, i_valid = i_valid)
+print 'f_train:', f_train.shape
+print 'g_train:', g_train.shape
 
 # ------------------------------------------------------------------------
 # Initialize matrix with zeros
@@ -55,7 +32,7 @@ M = np.zeros((g.shape[0],f.shape[0]), dtype=np.float32)
 print 'M:', M.shape, M.dtype
 
 # -------------------------------------------------------------------------
-# Initialize theano variables
+print '\nInitialize theano variables'
 
 import theano
 import theano.tensor as T
@@ -69,7 +46,7 @@ loss = T.mean(T.abs_(T.dot(M,f)-g))
 grad = T.grad(loss, M)
 
 # -------------------------------------------------------------------------
-# Momentum gradient descent implementation
+print '\nInitialize Gradient Descent'
 
 # the values of the learning rate, momentum and epochs might need to be
 # adjusted for different data-sets for a better convergence
@@ -88,14 +65,14 @@ v = momentum * m - learning_rate * grad
 updates.append((m, v))
 updates.append((M, M + momentum * v - learning_rate * grad))
 
-# -------------------------------------------------------------------------
-# Run gradient decent for a given number of epochs
-
 train = theano.function(inputs=[],
                         outputs=[loss],
                         updates=updates)
 
 pydotprint(train, outfile= save_path + 'train.png', compact=False)
+
+# -------------------------------------------------------------------------
+print '\nRun Gradien Descent'
 
 epochs = int(1e5)
 
@@ -130,7 +107,7 @@ except KeyboardInterrupt:
 f.close()
 
 # -------------------------------------------------------------------------
-# Save matrix obtained 
+print '\n Save matrix obtained'
 
 M = M.get_value()
 
@@ -139,24 +116,6 @@ print 'M:', M.shape, M.dtype
 fname = save_path + 'M.npy'
 print 'Writing:', fname
 np.save(fname, M)
-
-# -------------------------------------------------------------------------
-# Plot loss function during training
-
-log_loss = np.loadtxt(save_path + 'train.log',skiprows = 1,usecols = (1,2))
-
-i = log_loss[:,0]
-loss_train = log_loss[:,1]
-
-plt.figure()
-plt.plot(i/10**3,loss_train,label = 'training')
-plt.xlabel('epoch ($10^3$)')
-plt.ylabel('$\mathcal{L}$ (kW m$^{-3}$)')
-plt.grid(True)
-plt.savefig(save_path + 'loss_log.png',dpi = 300, bbox_inches='tight')
-
-    
-
 
 
     
