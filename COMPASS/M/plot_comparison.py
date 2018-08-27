@@ -7,9 +7,16 @@ sys.path.insert(0, '../bib/')
 import bib_geom
 
 # -------------------------------------------------------------------------
+
+save_path = './Results/'
+# all *.png files will be stored in the following directory
+if not os.path.exists(save_path + 'COMPARE/'):
+    print '\nCreating directory ', save_path + 'COMPARE/'
+    os.makedirs(save_path + 'COMPARE/')
+
+# -------------------------------------------------------------------------
 print '\nLoad data'
 
-save_path = './Results_virtual/'
 tomo_COMPASS = np.load(save_path + 'tomo_COMPASS.npz')
 f = tomo_COMPASS['f']
 g = tomo_COMPASS['g']
@@ -29,14 +36,12 @@ g_valid = g[tomo_COMPASS['i_valid']]
 t_valid = t[tomo_COMPASS['i_valid']]
 pulse_valid = pulse[tomo_COMPASS['i_valid']]
 
+g_valid = g_valid.reshape((g_valid.shape[0],bib_geom.N_ROWS,bib_geom.N_COLS))
+
 print 'g_valid:', g_valid.shape, g_valid.dtype
 print 'f_valid:', f_valid.shape, f_valid.dtype
 print 't_valid:', t_valid.shape, t_valid.dtype
 print 'pulse_valid:', pulse_valid.shape, pulse_valid.dtype
-
-if not os.path.exists(save_path + 'COMPARE/'):
-    print 'Creating directory ', save_path + 'COMPARE/'
-    os.makedirs(save_path + 'COMPARE/')
 
 # -------------------------------------------------------------------------
 print '\nCalculate Reconstructions'
@@ -53,6 +58,7 @@ print 'g_m :', g_m.shape, g_m.dtype
 # g_m = np.clip(g_m, a_min = 0, a_max = None)
 
 # -------------------------------------------------------------------------
+print '\nPlot Reconstructions'
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec

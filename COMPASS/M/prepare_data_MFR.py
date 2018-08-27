@@ -5,7 +5,6 @@ import numpy as np
 
 sys.path.insert(0, '../bib/')
 import bib_data
-import bib_geom
 import bib_utils
 
 #--------------------------------------------------------------------------
@@ -29,8 +28,8 @@ import bib_utils
 # -------------------------------------------------------------------------
 print '\nLoad MFR data'
 
-# Load Reconstructions from *.mat files, choose the correct directory
-data_directory = '../data/Reconstructions_a/'
+# Load Reconstructions from *.mat files generated with MFR Matlab code, choose the correct directory
+data_directory = '../data/Reconstructions/'
 f,g,ef,fv,t,chi2,pulse,SXRA,SXRB,SXRF = bib_data.get_tomo_MFR(data_directory, subsampling = 1,  flatten = True)
 
 print '\nData obtained'
@@ -58,8 +57,8 @@ print '#valid :', len(i_valid)
 # -------------------------------------------------------------------------
 print '\nGenerating save files'
 
-# Directory to which all results relative to the NN training will be saved
-# Be aware that changing it means you must do so in all subsequent files
+# Directory to which all results relative to the matrix fitting will be saved
+# Be aware that changing this directory here, means you must do so in all subsequent files
 save_path = './Results/'
 if not os.path.exists(save_path):
         print 'Creating directory ', save_path

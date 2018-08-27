@@ -26,7 +26,7 @@ print 'f_train:', f_train.shape
 print 'g_train:', g_train.shape
 
 # ------------------------------------------------------------------------
-# Initialize matrix with zeros
+print '\nInitialize M matrix with zeros'
 
 M = np.zeros((g.shape[0],f.shape[0]), dtype=np.float32)
 print 'M:', M.shape, M.dtype

@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt 
 
 # -------------------------------------------------------------------------
-# Load log file with training/validation loss values
+# Load log file with training loss values
 
 save_path = './Results/'
 fname = save_path + 'train.log'
