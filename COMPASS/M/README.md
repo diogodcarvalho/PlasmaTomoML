@@ -66,8 +66,7 @@
       - `AMRE.png` average absolute mean error pixelwise
       - `MRE.png` average mean relative error pixelwise
       - `NRMSE.png` average normalise root mean squared error pixelwise
-    - Notes:
-      - Average metrics values are printed in the terminal
+      - Average metrics values printed in the terminal
 
 ## To compare original and new reconstructions
 
@@ -79,7 +78,6 @@
       - `COMPARE/` directory with .png files for all the validation set tomograms, will be stored inside `save_path`
     - Notes:
       - Only the validation set is used
-      - If you only wish to calculate the quality metrics run `calc_metrics.py`
 
 <p align="center">
   <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/COMPASS/M/README_examples/COMPASS_10160_1.231.png width="700"/>
