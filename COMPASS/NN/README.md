@@ -1,7 +1,7 @@
-## JET Bolometer NN model
+## COMPASS SXR NN model
 
 <p align="center">
-  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/NN/README_examples/JETNet.png width="800">
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/COMPASS/NN/README_examples/COMPASSNet.png width="800">
 </p>
 
 The NN was implemented using the Keras library, the building blocks of the NN are found in the following files:
@@ -9,7 +9,48 @@ The NN was implemented using the Keras library, the building blocks of the NN ar
 - `nn_callback.py` contains the callbacks used at training time to save the NN parameters
 - `nn_train.py` performs the training of the NN
 
+## To prepare the dataset
 
+Different options to generate the dataset used for the training of the NN exist. Choose one of the following deppending on your intent.
+
+#### Option 1 
+
+If the geometry you want to apply the NN coincides with the geometry used to generate the training MFR tomograms
+
+ - Run `prepare_data_MFR.py`
+   - User defined parameters:
+      - `data_directory` path to directory where *.mat files are saved (Default = '../data/Reconstructions/')
+      - `ratio` list with percentage of data to training/validation/test set (Default = [.8,.1,.1])
+      - `save_path` directory in which all outputs will be saved (Default = './Results/')
+   - Outputs:
+      - `Results/` directory where all further information will be saved
+      - `tomo_COMPASS.npz` contains all tomography relevant information (detector values, tomograms, etc...) and training/validation/test set index division
+      - `tomo_GEOM.npz` contains information about camera geometry that is used in these reconstructions
+
+In this case the training/validation/test sets belong to the same group of *.mat files generated with the same geometry. No changes are made in the detector values used as input of the NN.
+    
+#### Option 2
+
+If the geometry you want to apply the NN does not coincide with the geometry used to generate the training MFR tomograms
+
+ - Run `prepare_data_MFR_virtual.py` 
+   - User defined parameters:
+      - `data_directory_old` path to directory where *.mat files for the training/validation set are saved (Default = '../data/Reconstructions/')
+      - if `test_set_available = True` assumes there exists directory with reconstruction computed for the new geometry and will use it as test set, new geometry is loaded automatically from the correspondent *.mat files
+        - `data_directory_new` path to test set reconstructions 
+      - if `test_set_available = False` no test set will be created and user needs to define the new geometry
+        - `GEOM` new geometry (ex. 201701)
+        - `SXRA_new`,`SXRB_new`,`SXRF_new` used detectors list
+      - `ratio` list with percentage of data to training/validation set (Default = [.9,.1])
+      - `save_path` directory in which all outputs will be saved (Default = './Results/')
+   - Outputs:
+      - `Results/` directory where all further information will be saved
+      - `tomo_COMPASS.npz` contains all tomography relevant information (detector values, tomograms, etc...) and training/validation/test set index division
+      - `tomo_GEOM.npz` contains information about NEW camera geometry
+    - Notes:
+      - if if `test_set_available = False` the files which depend on the existance of a test set (ex. `calc_metrics.py`, `plot_comparison.py`) cannot be used.
+      
+In this case the training/validation sets belong to a group of reconstructions computed for a camera geometry different to the one we wish to  apply the NN. The original detector values are disregarded and virtual detectors (based on the new geometry) are computed in the old tomograms. These virtual detectors will be the ones used as inputs of the NN. The test set (if it exists) is composed of tomograms obtained for the new geometry.
 
 ## To train the NN
 
@@ -33,6 +74,7 @@ The NN was implemented using the Keras library, the building blocks of the NN ar
     - The training process can be stopped at any point by pressing Ctrl+c
     - This script must be run before any of the others can be used
 
+# STILL NOT FINISHED -----------------------------------------------------------
 ## To plot the loss function behaviour
 
 - Run `plot_loss.py` to plot the training/validation loss evolution during training 
