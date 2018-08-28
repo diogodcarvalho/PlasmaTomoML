@@ -56,25 +56,20 @@ In this case the training/validation sets belong to a group of reconstructions c
 
 - Run `nn_train.py` to train the NN 
   - User defined parameters:
-    - `fname` file from which to load the data (Default = '../data/train_data.hdf')
-    - `faulty` if True will use faulty detectors, if False will set them to zero (Default = False)
-    - `ratio` list with percentage of data to training/validation/test set (Default = [.8,.1,.1])
+    - `save_path` directory where tomo_COMPASS.npz was saved, all outputs will also be stored here (Default = './Results/')
     - `loss` loss function used (Default = 'mae')
     - `filters` number of convolution filters, changes the size of the dense layers proportionally (Default = 20)
     - `learning_rate` gradient descent learning rate, tune for better convergence (Default = 1e-4)
     - `epochs` number of gradient descent iterations (Default = 1e5)
-    - `batch_size` (Default = 398)
-    - `save_path` directory in which all outputs will be saved (Default = './Results/')
+    - `batch_size` (Default = 435)
   - Outputs:
     - `model_options.log` file with selected training option info (filters,lr,epochs,...)
     - `train.log` stores training and validation loss function error during training
-    - `i_divided.npy` indices of training/validation/test set usefull if tests are to be performed later
     - `model_parameters.hdf` best NN parameters obtained
   - Notes:
-    - The training process can be stopped at any point by pressing Ctrl+c
-    - This script must be run before any of the others can be used
-
-# STILL NOT FINISHED -----------------------------------------------------------
+    - The training process can be terminated at any point by pressing Ctrl+c, if not the NN will train untill maximum number of epochs is reached
+    
+    
 ## To plot the loss function behaviour
 
 - Run `plot_loss.py` to plot the training/validation loss evolution during training 
@@ -84,8 +79,10 @@ In this case the training/validation sets belong to a group of reconstructions c
     - `loss_log.png` loss function evolution (example below)
 
 <p align="center">
-  <img src="https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/NN/README_examples/loss_log.png" width="400"/>
+  <img src="https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/COMPASS/NN/README_examples/loss_log.png" width="400"/>
 </p> 
+
+# STILL NOT FINISHED -----------------------------------------------------------
 
 ## To generate full pulse animations
 
