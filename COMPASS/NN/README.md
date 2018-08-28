@@ -74,6 +74,7 @@ In this case the training/validation sets belong to a group of reconstructions c
     - The training process can be stopped at any point by pressing Ctrl+c
     - This script must be run before any of the others can be used
 
+# STILL NOT FINISHED -----------------------------------------------------------
 ## To plot the loss function behaviour
 
 - Run `plot_loss.py` to plot the training/validation loss evolution during training 
