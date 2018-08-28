@@ -69,7 +69,6 @@ In this case the training/validation sets belong to a group of reconstructions c
   - Notes:
     - The training process can be terminated at any point by pressing Ctrl+c, if not the NN will train untill maximum number of epochs is reached
     
-    
 ## To plot the loss function behaviour
 
 - Run `plot_loss.py` to plot the training/validation loss evolution during training 
@@ -82,6 +81,46 @@ In this case the training/validation sets belong to a group of reconstructions c
   <img src="https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/COMPASS/NN/README_examples/loss_log.png" width="400"/>
 </p> 
 
+## To calculate quality metrics
+
+- Run `calc_metrics.py` to calculate the quality metrics in the test set
+    - User defined parameters:
+      - `save_path` directory where all NN information was stored (Default = './Results/')
+    - Outputs:
+      - `METRICS/` directory where all outputs are saved, is located inside `save_path`
+      - `metrics.csv` contains all metrics calculated for specific pulse and time-step
+      - `AMRE.png` average absolute mean error pixelwise
+      - `MRE.png` average mean relative error pixelwise
+      - `NRMSE.png` average normalise root mean squared error pixelwise
+      - Average metrics values printed in the terminal
+      
+## To calculate quality metrics with shut-down detectors
+
+- Run `calc_metrics_dropout.py` to calculate the quality metrics in the validation set after shutting down a given number of detectors at a time. Performs calculations on all possible combinations and outputs average value 
+    - User defined parameters:
+      - `fname` .hdf file on which the NN was fitted (Default = train_data.hdf)
+      - `save_path` directory where the NN parameters `model_parameters.hdf` was stored (Default = './Results/')
+      - `n_shutdown` number of detectors to shut-down
+    - Outputs:
+      - Average metrics values printed in the terminal
+    - Notes:
+      - Only the test set is used
+ 
+## To compare original and new reconstructions
+
+ - Run `plot_comparison.py` to generate .png files with differences between original reconstructions and new ones performed with matrix M
+    - User defined parameters:
+      - `save_path` directory where all NN information was stored (Default = './Results/')
+      - `pulses` list of pulses to plot
+    - Outputs:
+      - `COMPARE/` directory with .png files for all the validation set tomograms, will be stored inside `save_path`
+    - Notes:
+      - Only the test set is used
+
+<p align="center">
+  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/COMPASS/NN/README_examples/COMPASS_10099_1.08.png width="700"/>
+</p> 
+ 
 # STILL NOT FINISHED -----------------------------------------------------------
 
 ## To generate full pulse animations
@@ -117,41 +156,4 @@ In this case the training/validation sets belong to a group of reconstructions c
 <p align="center">
   <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/NN/README_examples/JET_92213_49.62_54.02.png width="700"/>
 </p> 
-
-## To compare original and new reconstructions
-
- - Run `plot_comparison.py` to generate .png files with differences between original reconstructions and new ones performed with matrix M
-    - User defined parameters:
-      - `fname` .hdf file on which `M.npy` was fitted (Default = train_data.hdf)
-      - `save_path` directory where the NN parameters `model_parameters.hdf` was stored (Default = './Results/')
-    - Outputs:
-      - `COMPARE/` directory with .png files for all the validation set tomograms, will be stored inside `save_path`
-    - Notes:
-      - Only the validation set is used (defined in `i_divided.npy` saved by running `nn_train.py`)
-      - During the plotting the values of the quality metrics (ssim, psnr, nrmse, e_power) are printed in the terminal
-      - If you only wish to calculate the quality metrics run `calc_metrics.py`
-
-<p align="center">
-  <img src=https://github.com/diogodcarvalho/PlasmaTomoML/blob/master/JET/NN/README_examples/JET_90283.0_46.2981.png width="700"/>
-</p> 
-
-## To calculate quality metrics
-
-- Run `calc_metrics.py` to calculate the quality metrics (ssim,psnr,nrmse,e_power) in the validation set
-    - User defined parameters:
-      - `fname` .hdf file on which the NN was fitted (Default = train_data.hdf)
-      - `save_path` directory where the NN parameters `model_parameters.hdf` was stored (Default = './Results/')
-    - Outputs:
-      - (ssim,psnr,nrmse,e_power) average values printed in the terminal   
-
-## To calculate quality metrics with shut-down detectors
-
-- Run `calc_metrics_dropout.py` to calculate the quality metrics (ssim,psnr,nrmse,e_power) in the validation set after shutting down a given number of detectors at a time. Performs calculations on all possible combinations and outputs average value 
-    - User defined parameters:
-      - `fname` .hdf file on which the NN was fitted (Default = train_data.hdf)
-      - `save_path` directory where the NN parameters `model_parameters.hdf` was stored (Default = './Results/')
-      - `n_shutdown` number of detectors to shut-down
-    - Outputs:
-      - (ssim,psnr,nrmse,e_power) average values printed in the terminal
- 
  
