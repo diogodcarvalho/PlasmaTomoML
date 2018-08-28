@@ -11,7 +11,7 @@ import bib_metrics
 # -------------------------------------------------------------------------
 # Initialize Geometry 
 
-save_path = './Results_virtual/'
+save_path = './Results/'
 geom = bib_geom.Geometry(save_path + 'tomo_GEOM.npz')
 
 # -------------------------------------------------------------------------
@@ -38,11 +38,6 @@ ef_test = ef[tomo_COMPASS['i_test']]
 t_test = t[tomo_COMPASS['i_test']]
 chi2_test = chi2[tomo_COMPASS['i_test']]
 pulse_test = pulse[tomo_COMPASS['i_test']]
-
-
-# f_test = np.load('f.npy')
-# ef_test = np.load('ef.npy')
-# g_test = np.load('g.npy')
 
 print 'f_test:', f_test.shape
 print 'g_test:', g_test.shape
@@ -78,8 +73,6 @@ g_test_nn = bib_utils.resize_NN_image(g_test_nn, training = False)
 print 'g_test:', g_test.shape, g_test.dtype
 print 'g_test_nn:', g_test_nn.shape, g_test_nn.dtype
 
-
-
 # -------------------------------------------------------------------------
 print '\nCalculate Metrics'
 
@@ -114,42 +107,6 @@ print 'e_R: %.2f +- %.2f' % (np.mean(e_R), np.std(e_R))
 print 'e_Z: %.2f +- %.2f' % (np.mean(e_Z), np.std(e_Z))
 print 'chi2_nn: %.2f +- %.2f' % (np.mean(chi2_nn), np.std(chi2_nn))
 
-
-# import matplotlib.pyplot as plt
-
-# aaa = geom.get_virtual_cameras(g_test[10],only_working = True, clip_zero = True)
-# print aaa.shape
-# print aaa
-# plt.figure()
-# plt.plot(np.abs(aaa[0]-f_test[10]),'r-')
-# plt.plot(ef_test[10],'b.')
-
-# plt.figure()
-# plt.plot(aaa[0],'r-')
-# plt.plot(f_test[10],'b.')
-# plt.show()
-# # plt.subplot(121)
-# # plt.imshow(g_test[10])
-# # plt.subplot(122)
-# # plt.imshow(g_test_nn[10])
-# # print chi2_nn[10]
-# # plt.show()
-
-
-# aaa = geom.get_virtual_cameras(g_test[159],only_working = True, clip_zero = True)
-# # plt.subplot(121)
-# # plt.imshow(g_test[159])
-# # plt.subplot(122)
-# # plt.imshow(g_test_nn[159])
-# print chi2_nn[159]
-# plt.figure()
-# plt.plot(np.abs(aaa[0]-f_test[159]),'r-')
-# plt.plot(ef_test[159],'b.')
-# plt.figure()
-# plt.plot(aaa[0],'r-')
-# plt.plot(f_test[159],'b.')
-# plt.show()
-
 #------------------------------------------------------------------
 print '\nGenerating save files'
 
@@ -161,12 +118,8 @@ with open(save_path + 'metrics.csv', 'w') as csvfile:
 	writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
 	writer.writeheader()
-	# for i in range(pulse_test.shape[0]):
-	# 	writer.writerow({'pulse': pulse_test[i], 't': t_test[i] , 'ssim': ssim[i],
-	# 	 'psnr': psnr[i], 'nrmse': nrmse[i], 'e_power': e_power[i], 
-	# 	 'e_R': e_R[i], 'e_Z': e_Z[i], 'chi2_nn': chi2_nn[i]})
-	for i in range(chi2_nn.shape[0]):
-		writer.writerow({'ssim': ssim[i],
+	for i in range(pulse_test.shape[0]):
+		writer.writerow({'pulse': pulse_test[i], 't': t_test[i] , 'ssim': ssim[i],
 		 'psnr': psnr[i], 'nrmse': nrmse[i], 'e_power': e_power[i], 
 		 'e_R': e_R[i], 'e_Z': e_Z[i], 'chi2_nn': chi2_nn[i]})
 
@@ -179,9 +132,12 @@ with open(save_path + 'metrics.csv', 'w') as csvfile:
 # these reconstructions should no be taken into account
 chi2_2 = geom.get_chi2(f_test,g_test,ef_test)
 
+plt.plot(chi2_2)
+plt.show()
+
 from collections import Counter
 
-if np.mean(np.abs(chi2_test-chi2_2))>0.1:
+if np.max(np.abs(chi2_test-chi2_2))>0.1:
 	print '\n-----------------ATTENTION---------------------'
 	print 'Original chi2 from MFR Matlab'
 	print 'chi2: %.5f +- %.5f' % (np.mean(chi2_test), np.std(chi2_test))  

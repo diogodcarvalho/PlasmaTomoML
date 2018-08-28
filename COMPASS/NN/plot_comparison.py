@@ -9,7 +9,6 @@ import bib_geom
 import bib_data
 import bib_utils
 
-
 # -------------------------------------------------------------------------
 print '\nLoad data'
 
@@ -42,7 +41,7 @@ if not os.path.exists(save_path + 'COMPARE/'):
     print 'Creating directory ', save_path + 'COMPARE/'
     os.makedirs(save_path + 'COMPARE/')
 
-#------------------------------------------------------------------
+# -------------------------------------------------------------------------
 # Initialize NN for given trained weights
 
 import nn_model
