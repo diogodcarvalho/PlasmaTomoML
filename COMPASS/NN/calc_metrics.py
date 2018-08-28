@@ -132,9 +132,6 @@ with open(save_path + 'metrics.csv', 'w') as csvfile:
 # these reconstructions should no be taken into account
 chi2_2 = geom.get_chi2(f_test,g_test,ef_test)
 
-plt.plot(chi2_2)
-plt.show()
-
 from collections import Counter
 
 if np.max(np.abs(chi2_test-chi2_2))>0.1:

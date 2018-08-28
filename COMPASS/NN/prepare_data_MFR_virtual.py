@@ -52,8 +52,6 @@ print 'SXRA_old :', SXRA_old
 print 'SXRB_old :', SXRB_old
 print 'SXRF_old :', SXRF_old
 
-import matplotlib.pyplot as plt
-
 # -------------------------------------------------------------------------
 # Load information about new geometry
 
