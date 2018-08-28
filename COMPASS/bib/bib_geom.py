@@ -607,6 +607,8 @@ class Geometry:
 		chi2 = np.divide(chi2, error_detector)
 
 		chi2 = chi2[:,self.SXR_bool]
+
+		#chi2 = np.delete(chi2,24,axis=1)
 		
 		chi2 = chi2**2
 		

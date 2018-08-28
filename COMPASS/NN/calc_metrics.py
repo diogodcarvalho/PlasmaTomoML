@@ -134,7 +134,7 @@ chi2_2 = geom.get_chi2(f_test,g_test,ef_test)
 
 from collections import Counter
 
-if np.max(np.abs(chi2_test-chi2_2))>0.1:
+if np.mean(np.abs(chi2_test-chi2_2))>0.1:
 	print '\n-----------------ATTENTION---------------------'
 	print 'Original chi2 from MFR Matlab'
 	print 'chi2: %.5f +- %.5f' % (np.mean(chi2_test), np.std(chi2_test))  

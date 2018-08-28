@@ -9,7 +9,7 @@ import bib_utils
 # -------------------------------------------------------------------------
 print '\nLoad data'
 
-save_path = './Results_virtual/'
+save_path = './Results/'
 tomo_COMPASS = np.load(save_path + 'tomo_COMPASS.npz')
 f = tomo_COMPASS['f']
 g = tomo_COMPASS['g']

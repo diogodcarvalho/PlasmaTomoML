@@ -38,9 +38,14 @@ def get_tomo_MFR(data_directory, subsampling = 1, flatten = False, verbose= Fals
 
 	print 'Reading directory: ', data_directory
 
-	for filename in glob.glob(data_directory + '*.mat'):
+	# ensure files are opened by pulse number order 
+	filenames_dict = {int(filename[filename.find('shot')+len('shot'):filename.find('_reg')]):filename for filename in glob.glob(data_directory + '*.mat')}
+	filenames_pulses = list(filenames_dict.keys())
+	filenames_pulses.sort()
 
-		pulse = filename[filename.find('shot')+len('shot'):filename.find('_reg')]
+	for pulse in filenames_pulses:
+
+		filename = filenames_dict[pulse]
 
 		if verbose:
 			print filename
