@@ -1,6 +1,6 @@
 # PlasmaTomoML
 
-Tomographic algorithms implemented based on machine learning techniques to perform tomographic reconstructions in [JET](https://www.euro-fusion.org/devices/jet/) bolometer setup and [COMPASS](http://www.ipp.cas.cz/vedecka_struktura_ufp/tokamak/tokamak_compass/) SXR system. Two different methods were implemented :
+Tomographic algorithms implemented based on machine learning techniques to perform reconstructions in [JET](https://www.euro-fusion.org/devices/jet/) bolometer setup and [COMPASS](http://www.ipp.cas.cz/vedecka_struktura_ufp/tokamak/tokamak_compass/) SXR system. Two different methods were implemented :
 
 - Inverse tomographic transformation matrix fitting via gradient descent for genetarion of new tomograms by a single matrix multiplication step
 
