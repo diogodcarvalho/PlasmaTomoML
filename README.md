@@ -25,7 +25,7 @@ One must have installed and configured the following programs and packages to ru
    - "image_data_format": "channels_last"
    - "backend" : "tensorflow"
 
-and make the necessary changes in function `resize_NN_image()` (present in `COMPASS/bib/bib_utils.py` and `JET/bib/bib_utils.py`) to ensure the channel axis  the last one. 
+Additionaly make the necessary changes in function `resize_NN_image()` (present in `COMPASS/bib/bib_utils.py` and `JET/bib/bib_utils.py`) to ensure the channel axis is the last one. 
 
 ## Access to Tomography Databases 
 
