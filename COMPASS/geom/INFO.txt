@@ -1,7 +1,6 @@
 All directorys and files present here are just a copy of the ones available at M. Imrisek shared
-directory. So if any new Geometry is available it just need to be added here, given it follows a similar
-structure to the previously existing ones it shouldn't be too problematic to add what is needed in the 
-bib/ directory files (bib_geom should be the only one needing extra code)
+directory. So if any new Geometry is available it just needs to be added here, given it follows a similar
+structure to these ones. It shouldn't also be too problematic to add what is needed in the  bib/bib_geom.py file 
 
 201410 - Pulses [8468,13213]
 -> Camera B has problems for pulses outside region [9860,11150]
