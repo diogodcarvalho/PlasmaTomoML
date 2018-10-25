@@ -1,6 +1,6 @@
 # PlasmaTomoML
 
-Tomographic algorithms implemented based on machine learning techniques to perform tomographic reconstructions in [JET](https://www.euro-fusion.org/devices/jet/) bolometer setup and [COMPASS](http://www.ipp.cas.cz/vedecka_struktura_ufp/tokamak/tokamak_compass/) SXR system. Two different methods were implemented :
+Tomographic algorithms implemented based on machine learning techniques to perform reconstructions in [JET](https://www.euro-fusion.org/devices/jet/) bolometer setup and [COMPASS](http://www.ipp.cas.cz/vedecka_struktura_ufp/tokamak/tokamak_compass/) SXR system. Two different methods were implemented :
 
 - Inverse tomographic transformation matrix fitting via gradient descent for genetarion of new tomograms by a single matrix multiplication step
 
@@ -25,11 +25,11 @@ One must have installed and configured the following programs and packages to ru
    - "image_data_format": "channels_last"
    - "backend" : "tensorflow"
 
-and make the necessary changes in function `resize_NN_image()` (present in `COMPASS/bib/bib_utils.py` and `JET/bib/bib_utils.py`) to ensure the channel axis  the last one. 
+Additionaly make the necessary changes in function `resize_NN_image()` (present in `COMPASS/bib/bib_utils.py` and `JET/bib/bib_utils.py`) to ensure the channel axis is the last one. 
 
 ## Access to Tomography Databases 
 
-The folders developed for JET/ and COMPASS/ are completely independent of each other. No data from the actual experimets is available in this repository since disclosure is not permited. Neverthless scripts to read from the databases (which will only work if one has access to them) are given as well as instructions for the outputed files structure.
+The folders developed for JET/ and COMPASS/ are completely independent of each other. No data from the actual experimets is available in this repository since disclosure is not permited. Neverthless scripts to read from the databases (which will only work if one has access to them) are given as well as instructions for the output files structure.
 
 ## References:
 
