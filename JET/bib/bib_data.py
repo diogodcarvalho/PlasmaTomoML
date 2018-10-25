@@ -7,7 +7,7 @@ from bib_geom import KB5_BROKEN
 
 #-----------------------------------------------------------------------------
 # ATTENTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# The following functions work óutside a  JET cluster 
+# The following functions work outside a  JET cluster 
 # Nevertheless they require the creation of *.hdf files using the files 
 # get_bolo_JET_database.py and get_tomo_JET_database.py
 # located in the directory JET/data/
