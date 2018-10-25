@@ -29,7 +29,7 @@ Additionaly make the necessary changes in function `resize_NN_image()` (present 
 
 ## Access to Tomography Databases 
 
-The folders developed for JET/ and COMPASS/ are completely independent of each other. No data from the actual experimets is available in this repository since disclosure is not permited. Neverthless scripts to read from the databases (which will only work if one has access to them) are given as well as instructions for the outputed files structure.
+The folders developed for JET/ and COMPASS/ are completely independent of each other. No data from the actual experimets is available in this repository since disclosure is not permited. Neverthless scripts to read from the databases (which will only work if one has access to them) are given as well as instructions for the output files structure.
 
 ## References:
 
