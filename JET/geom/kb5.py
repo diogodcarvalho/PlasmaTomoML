@@ -18,8 +18,8 @@ plt.axes().set_aspect('equal')
 
 # -----------------------------------------------------------------------------
 
-Ri,Rf,Zi,Zf = bib_geom.get_los_JET(inside = False)
-Ri2,_,Zi2,_ = bib_geom.get_los_JET(inside = True)
+Ri,_,Zi,_ = bib_geom.get_los_JET(inside = False)
+Ri2,Rf,Zi2,Zf = bib_geom.get_los_JET(inside = True)
 
 for (ri,rf,zi,zf,ri2,zi2) in zip(Ri,Rf,Zi,Zf,Ri2,Zi2):
     plt.plot((ri,ri2), (zi,zi2), 'g', linewidth=.7)
