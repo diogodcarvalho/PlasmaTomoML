@@ -15,5 +15,5 @@
     - `pulses` pulse range from which tomograms should be downloaded
     - `fname` name of file where data will be saved (Default = 'bolo_JET.hdf')
   - Outputs:
-    - `<fname>.hdf` data file with tomograms and bolometer measures
+    - `<fname>.hdf` data file with bolometer measures
     
