@@ -33,7 +33,7 @@ def get_tomo(pulse):
         if ier != 0:
             break
         t = np.float32(ihdata.strip().split()[-1][2:-1])
-        tomo.append(np.flipud(np.transpose(data)))
+        tomo.append(np.transpose(data))
         tomo_t.append(t)
     if len(tomo) > 0:
         tomo = np.array(tomo)
@@ -83,15 +83,12 @@ print 'Writing:', fname
 f = h5py.File(fname, 'w')
 
 # pulses which we want to recover, edit as you wish
-pulses = []
-
 # This was the interval used for the NN
-# pulse0 = 80128
-# pulse1 = 92504
-# pulses = range(pulse0,pulse1)
+pulse0 = 80128
+pulse1 = 92504
+pulses = range(pulse0,pulse1+1)
 # The ones used for the fitting of the inverse matrix
 # were also selected from this group 
-
 print 'pulses:', pulses
 
 for pulse in pulses:
