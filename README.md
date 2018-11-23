@@ -18,12 +18,24 @@ One must have installed and configured the following programs and packages to ru
 - [Theano](http://deeplearning.net/software/theano/)
 - [Keras](https://keras.io/) (optimized to run on top of Theano)
 - Edit `~/.keras/keras.json` to contain :  
-   - "image_data_format": "channels_first"
-   - "backend" : "theano"
+ ```
+ {
+    "image_data_format": "channels_first",
+    "epsilon": 1e-07,
+    "floatx": "float32",
+    "backend": "theano"
+}
+```
    
 **Note** : Running the NN implemetation, as it is, using TensorFlow backend for Keras is also possible but the performance will be considerably slower. If you pretend to use TensorFlow and maintain the same performance edit `~/.keras/keras.json` to contain :  
-   - "image_data_format": "channels_last"
-   - "backend" : "tensorflow"
+```
+{
+    "image_data_format": "channels_last",
+    "epsilon": 1e-07,
+    "floatx": "float32",
+    "backend": "tensorflow"
+}
+```
 
 Additionaly make the necessary changes in function `resize_NN_image()` (present in `COMPASS/bib/bib_utils.py` and `JET/bib/bib_utils.py`) to ensure the channel axis is the last one. 
 
