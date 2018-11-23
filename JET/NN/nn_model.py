@@ -29,16 +29,16 @@ def build_model(filters = 20, dropout_rate = 0.):
 
 	x = Reshape((filters,15,25))(x)
 
-	x = Conv2DTranspose(filters, kernel_size=(5,5), strides=(2,2), padding='same', data_format='channels_first')(x)
+	x = Conv2DTranspose(filters, kernel_size=(5,5), strides=(2,2), padding='same')(x)
 	x = Activation('relu')(x)
 
-	x = Conv2DTranspose(filters, kernel_size=(5,5), strides=(2,2), padding='same', data_format='channels_first')(x)
+	x = Conv2DTranspose(filters, kernel_size=(5,5), strides=(2,2), padding='same')(x)
 	x = Activation('relu')(x)
 
-	x = Conv2DTranspose(filters, kernel_size=(5,5), strides=(2,2), padding='same', data_format='channels_first')(x)
+	x = Conv2DTranspose(filters, kernel_size=(5,5), strides=(2,2), padding='same')(x)
 	x = Activation('relu')(x)
 
-	outputs = Conv2DTranspose(1, kernel_size=(5,5), strides=(1,1), padding='same', data_format='channels_first')(x)
+	outputs = Conv2DTranspose(1, kernel_size=(5,5), strides=(1,1), padding='same')(x)
 
 	model = Model(inputs=inputs, outputs=outputs)
 
